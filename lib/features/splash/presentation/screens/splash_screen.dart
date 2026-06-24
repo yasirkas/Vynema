@@ -26,13 +26,12 @@ class _SplashScreenState extends State<SplashScreen>
     _opacity = CurvedAnimation(parent: _ctrl, curve: Curves.easeIn);
     _scale = Tween<double>(begin: 0.85, end: 1.0)
         .animate(CurvedAnimation(parent: _ctrl, curve: Curves.easeOutCubic));
+    _ctrl.addStatusListener((status) {
+      if (status == AnimationStatus.completed && mounted) {
+        context.go('/home');
+      }
+    });
     _ctrl.forward();
-    _navigate();
-  }
-
-  Future<void> _navigate() async {
-    await Future.delayed(const Duration(milliseconds: 2000));
-    if (mounted) context.go('/home');
   }
 
   @override
