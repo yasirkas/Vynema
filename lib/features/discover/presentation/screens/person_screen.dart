@@ -2,7 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/l10n.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../../shared/widgets/error_view.dart';
 import '../../data/models/media_item.dart';
 import '../../data/models/person.dart';
@@ -23,7 +25,7 @@ class PersonScreen extends ConsumerWidget {
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, _) => Center(
           child: ErrorView(
-            message: error.toString(),
+            message: localizeError(context.l10n, error),
             onRetry: () => ref.invalidate(personProvider(personId)),
           ),
         ),
@@ -90,7 +92,8 @@ class _PersonContent extends StatelessWidget {
                       if (person.knownForDepartment.isNotEmpty) ...[
                         const SizedBox(height: 4),
                         Text(
-                          _departmentLabel(person.knownForDepartment),
+                          _departmentLabel(
+                              context.l10n, person.knownForDepartment),
                           style: Theme.of(context)
                               .textTheme
                               .bodyMedium
@@ -145,7 +148,7 @@ class _PersonContent extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Biyografi',
+                    context.l10n.personBiography,
                     style: Theme.of(context)
                         .textTheme
                         .titleMedium
@@ -169,13 +172,14 @@ class _PersonContent extends StatelessWidget {
     );
   }
 
-  String _departmentLabel(String dept) => switch (dept) {
-        'Acting' => 'Oyuncu',
-        'Directing' => 'Yönetmen',
-        'Writing' => 'Senarist',
-        'Production' => 'Yapımcı',
-        'Sound' => 'Ses',
-        'Camera' => 'Kamera',
+  String _departmentLabel(AppLocalizations l10n, String dept) =>
+      switch (dept) {
+        'Acting' => l10n.deptActing,
+        'Directing' => l10n.deptDirecting,
+        'Writing' => l10n.deptWriting,
+        'Production' => l10n.deptProduction,
+        'Sound' => l10n.deptSound,
+        'Camera' => l10n.deptCamera,
         _ => dept,
       };
 }
@@ -208,7 +212,7 @@ class _ExpandableBioState extends State<_ExpandableBio> {
         GestureDetector(
           onTap: () => setState(() => _expanded = !_expanded),
           child: Text(
-            _expanded ? 'Daha az göster' : 'Devamını gör',
+            _expanded ? context.l10n.bioShowLess : context.l10n.bioReadMore,
             style: TextStyle(
               color: Theme.of(context).colorScheme.primary,
               fontWeight: FontWeight.w600,
@@ -235,7 +239,7 @@ class _CreditsSection extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 20, 16, 12),
           child: Text(
-            'Filmografisi',
+            context.l10n.personFilmography,
             style: Theme.of(context)
                 .textTheme
                 .titleMedium

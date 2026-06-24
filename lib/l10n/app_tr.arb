@@ -1,0 +1,90 @@
+{
+  "@@locale": "tr",
+  "appTitle": "Vynema",
+
+  "navDiscover": "Keşfet",
+  "navSearch": "Ara",
+  "navFavorites": "Favoriler",
+
+  "filterTooltip": "Filtrele",
+  "themeToggleTooltip": "Tema değiştir",
+  "settingsTooltip": "Ayarlar",
+
+  "carouselTrending": "Bu Hafta Trend",
+  "carouselNowPlaying": "Vizyonda",
+  "carouselTopRated": "En Çok Beğenilenler",
+
+  "titlePopularMovies": "Popüler Filmler",
+  "titlePopularTv": "Popüler Diziler",
+  "titleTopMovies": "En İyi Filmler",
+  "titleTopTv": "En İyi Diziler",
+  "titleNewestMovies": "En Yeni Filmler",
+  "titleNewestTv": "En Yeni Diziler",
+
+  "searchTitle": "Ara",
+  "searchHint": "Film veya dizi ara...",
+  "searchPrompt": "Keşfetmek için bir film veya dizi adı yazın.",
+  "searchNoResults": "\"{query}\" için sonuç bulunamadı.",
+
+  "favoritesTitle": "Favoriler",
+  "favoritesEmptyTitle": "Henüz favori eklemediniz.",
+  "favoritesEmptySubtitle": "Beğendiğiniz film ve dizileri kalp simgesine dokunarak buraya ekleyin.",
+
+  "detailFavoriteAdd": "Favorilere Ekle",
+  "detailFavoriteRemove": "Favorilerden Çıkar",
+  "detailOverview": "Özet",
+  "detailTrailerTooltip": "Fragmanı İzle",
+  "detailWatchProviders": "İzleme Platformları",
+  "detailCast": "Oyuncular",
+  "detailSimilarMovies": "Benzer Filmler",
+  "detailSimilarTv": "Benzer Diziler",
+
+  "typeMovie": "Film",
+  "typeTv": "Dizi",
+
+  "personBiography": "Biyografi",
+  "personFilmography": "Filmografisi",
+  "bioReadMore": "Devamını gör",
+  "bioShowLess": "Daha az göster",
+
+  "deptActing": "Oyuncu",
+  "deptDirecting": "Yönetmen",
+  "deptWriting": "Senarist",
+  "deptProduction": "Yapımcı",
+  "deptSound": "Ses",
+  "deptCamera": "Kamera",
+
+  "filterTitle": "Filtrele",
+  "filterContentType": "İçerik Türü",
+  "filterSortBy": "Sıralama",
+  "filterMinRating": "Min. Puan",
+  "filterRatingAll": "Hepsi",
+  "filterYear": "Yıl (isteğe bağlı)",
+  "filterYearHint": "örn. 2023",
+  "filterApply": "Uygula",
+
+  "sortPopularity": "Popülariteye Göre",
+  "sortRating": "Puana Göre",
+  "sortNewest": "En Yeni",
+
+  "emptyContent": "İçerik bulunamadı.",
+  "retry": "Tekrar Dene",
+
+  "errorNoApiKey": "TMDB API anahtarı bulunamadı. Lütfen .env dosyasına anahtarınızı ekleyin.",
+  "errorTimeout": "Bağlantı zaman aşımına uğradı. Lütfen tekrar deneyin.",
+  "errorNoConnection": "İnternet bağlantısı yok. Bağlantınızı kontrol edin.",
+  "errorInvalidApiKey": "API anahtarı geçersiz. .env dosyasındaki anahtarı kontrol edin.",
+  "errorServer": "Sunucu hatası ({code}). Lütfen daha sonra tekrar deneyin.",
+  "errorUnknown": "Beklenmeyen bir hata oluştu. Lütfen tekrar deneyin.",
+
+  "settingsTitle": "Ayarlar",
+  "settingsAppearance": "Görünüm",
+  "settingsTheme": "Tema",
+  "settingsThemeSubtitle": "Açık veya koyu mod seçin",
+  "themeDark": "Koyu",
+  "themeLight": "Açık",
+  "settingsLanguage": "Dil",
+  "settingsLanguageSubtitle": "Uygulama dilini seçin",
+  "languageTurkish": "Türkçe",
+  "languageEnglish": "English"
+}

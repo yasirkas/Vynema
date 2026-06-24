@@ -10,6 +10,7 @@ import '../../features/discover/presentation/screens/home_screen.dart';
 import '../../features/discover/presentation/screens/person_screen.dart';
 import '../../features/discover/presentation/screens/search_screen.dart';
 import '../../features/favorites/presentation/screens/favorites_screen.dart';
+import '../../features/settings/presentation/screens/settings_screen.dart';
 import '../../shared/widgets/app_shell.dart';
 
 /// Application route configuration.
@@ -69,6 +70,11 @@ class AppRouter {
         ),
       ),
       GoRoute(
+        path: '/settings',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const SettingsScreen(),
+      ),
+      GoRoute(
         path: '/person/:id',
         parentNavigatorKey: _rootNavigatorKey,
         builder: (context, state) {
@@ -109,4 +115,6 @@ extension MediaNavigation on BuildContext {
 
   void goToDiscover(DiscoverFilter filter) =>
       push('/discover', extra: filter);
+
+  void goToSettings() => push('/settings');
 }

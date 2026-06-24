@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../core/l10n.dart';
+
 /// A centered error message with an optional retry action.
 class ErrorView extends StatelessWidget {
   const ErrorView({super.key, required this.message, this.onRetry});
@@ -27,7 +29,7 @@ class ErrorView extends StatelessWidget {
               FilledButton.icon(
                 onPressed: onRetry,
                 icon: const Icon(Icons.refresh_rounded),
-                label: const Text('Tekrar Dene'),
+                label: Text(context.l10n.retry),
               ),
             ],
           ],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/l10n.dart';
 import '../../../../shared/widgets/error_view.dart';
 import '../../../../shared/widgets/loading_grid.dart';
 import '../providers/search_provider.dart';
@@ -27,10 +28,11 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   Widget build(BuildContext context) {
     final query = ref.watch(searchQueryProvider);
     final results = ref.watch(searchResultsProvider);
+    final l10n = context.l10n;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Ara'),
+        title: Text(l10n.searchTitle),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(64),
           child: Padding(
@@ -42,7 +44,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
               onChanged:
                   ref.read(searchQueryProvider.notifier).update,
               decoration: InputDecoration(
-                hintText: 'Film veya dizi ara...',
+                hintText: l10n.searchHint,
                 prefixIcon: const Icon(Icons.search_rounded),
                 suffixIcon: query.isEmpty
                     ? null
@@ -63,23 +65,24 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   }
 
   Widget _buildBody(String query, AsyncValue results) {
+    final l10n = context.l10n;
     if (query.isEmpty) {
-      return const _Hint(
+      return _Hint(
         icon: Icons.movie_filter_outlined,
-        message: 'Keşfetmek için bir film veya dizi adı yazın.',
+        message: l10n.searchPrompt,
       );
     }
     return results.when(
       loading: () => const LoadingGrid(),
       error: (error, _) => ErrorView(
-        message: error.toString(),
+        message: localizeError(l10n, error),
         onRetry: () => ref.invalidate(searchResultsProvider),
       ),
       data: (items) {
         if (items.isEmpty) {
           return _Hint(
             icon: Icons.search_off_rounded,
-            message: '"$query" için sonuç bulunamadı.',
+            message: l10n.searchNoResults(query),
           );
         }
         return MediaGrid(items: items);

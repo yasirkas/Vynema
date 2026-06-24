@@ -69,7 +69,7 @@ class TmdbRemoteDataSource {
           .toList();
       return (items: results, hasMore: page < totalPages);
     } on DioException catch (e) {
-      throw ApiException(e.message ?? 'İçerik yüklenemedi.');
+      throw ApiException(apiErrorKindFor(e), statusCode: e.response?.statusCode);
     }
   }
 
@@ -83,7 +83,7 @@ class TmdbRemoteDataSource {
           .cast<Map<String, dynamic>>();
       return list.map(Genre.fromJson).toList();
     } on DioException catch (e) {
-      throw ApiException(e.message ?? 'Türler yüklenemedi.');
+      throw ApiException(apiErrorKindFor(e), statusCode: e.response?.statusCode);
     }
   }
 
@@ -109,7 +109,7 @@ class TmdbRemoteDataSource {
           .toList();
       return (items: results, hasMore: page < totalPages);
     } on DioException catch (e) {
-      throw ApiException(e.message ?? 'İçerik yüklenemedi.');
+      throw ApiException(apiErrorKindFor(e), statusCode: e.response?.statusCode);
     }
   }
 
@@ -121,7 +121,7 @@ class TmdbRemoteDataSource {
       );
       return Person.fromJson(response.data as Map<String, dynamic>);
     } on DioException catch (e) {
-      throw ApiException(e.message ?? 'Kişi yüklenemedi.');
+      throw ApiException(apiErrorKindFor(e), statusCode: e.response?.statusCode);
     }
   }
 
@@ -141,7 +141,7 @@ class TmdbRemoteDataSource {
         mediaType: type,
       );
     } on DioException catch (e) {
-      throw ApiException(e.message ?? 'İçerik yüklenemedi.');
+      throw ApiException(apiErrorKindFor(e), statusCode: e.response?.statusCode);
     }
   }
 
@@ -162,7 +162,7 @@ class TmdbRemoteDataSource {
               MediaItem.fromJson(json, fallbackType: fallbackType))
           .toList();
     } on DioException catch (e) {
-      throw ApiException(e.message ?? 'İçerik yüklenemedi.');
+      throw ApiException(apiErrorKindFor(e), statusCode: e.response?.statusCode);
     }
   }
 }

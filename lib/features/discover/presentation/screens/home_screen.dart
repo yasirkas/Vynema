@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/l10n.dart';
 import '../../../../core/providers.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -17,6 +18,7 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final themeMode = ref.watch(themeModeProvider);
     final isDark = themeMode == ThemeMode.dark;
+    final l10n = context.l10n;
 
     return Container(
       decoration: BoxDecoration(
@@ -40,12 +42,12 @@ class HomeScreen extends ConsumerWidget {
                 title: const _BrandTitle(),
                 actions: [
                   IconButton(
-                    tooltip: 'Filtrele',
+                    tooltip: l10n.filterTooltip,
                     icon: const Icon(Icons.tune_rounded),
                     onPressed: () => _openFilter(context),
                   ),
                   IconButton(
-                    tooltip: 'Tema değiştir',
+                    tooltip: l10n.themeToggleTooltip,
                     onPressed: () =>
                         ref.read(themeModeProvider.notifier).toggle(),
                     icon: Icon(
@@ -54,36 +56,41 @@ class HomeScreen extends ConsumerWidget {
                           : Icons.dark_mode_outlined,
                     ),
                   ),
+                  IconButton(
+                    tooltip: l10n.settingsTooltip,
+                    icon: const Icon(Icons.settings_outlined),
+                    onPressed: () => context.goToSettings(),
+                  ),
                 ],
               ),
               const SliverToBoxAdapter(child: _GenreRow()),
               SliverToBoxAdapter(
                 child: MediaCarousel(
-                  title: 'Bu Hafta Trend',
+                  title: l10n.carouselTrending,
                   provider: trendingProvider,
                 ),
               ),
               SliverToBoxAdapter(
                 child: MediaCarousel(
-                  title: 'Vizyonda',
+                  title: l10n.carouselNowPlaying,
                   provider: nowPlayingProvider,
                 ),
               ),
               SliverToBoxAdapter(
                 child: MediaCarousel(
-                  title: 'Popüler Filmler',
+                  title: l10n.titlePopularMovies,
                   provider: popularMoviesProvider,
                 ),
               ),
               SliverToBoxAdapter(
                 child: MediaCarousel(
-                  title: 'En Çok Beğenilenler',
+                  title: l10n.carouselTopRated,
                   provider: topRatedMoviesProvider,
                 ),
               ),
               SliverToBoxAdapter(
                 child: MediaCarousel(
-                  title: 'Popüler Diziler',
+                  title: l10n.titlePopularTv,
                   provider: popularTvProvider,
                 ),
               ),

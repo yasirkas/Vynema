@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/l10n.dart';
 import '../../data/models/discover_filter.dart';
 import '../../data/models/media_item.dart';
+import '../discover_l10n.dart';
 
 class FilterBottomSheet extends StatefulWidget {
   const FilterBottomSheet({super.key, required this.initial});
@@ -50,6 +52,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Padding(
       padding: EdgeInsets.fromLTRB(
         24,
@@ -64,7 +67,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
           Row(
             children: [
               Text(
-                'Filtrele',
+                l10n.filterTitle,
                 style: Theme.of(context)
                     .textTheme
                     .titleLarge
@@ -78,18 +81,19 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
             ],
           ),
           const SizedBox(height: 16),
-          _label(context, 'İçerik Türü'),
+          _label(context, l10n.filterContentType),
           const SizedBox(height: 8),
           SegmentedButton<MediaType>(
-            segments: const [
-              ButtonSegment(value: MediaType.movie, label: Text('Film')),
-              ButtonSegment(value: MediaType.tv, label: Text('Dizi')),
+            segments: [
+              ButtonSegment(
+                  value: MediaType.movie, label: Text(l10n.typeMovie)),
+              ButtonSegment(value: MediaType.tv, label: Text(l10n.typeTv)),
             ],
             selected: {_mediaType},
             onSelectionChanged: (s) => setState(() => _mediaType = s.first),
           ),
           const SizedBox(height: 20),
-          _label(context, 'Sıralama'),
+          _label(context, l10n.filterSortBy),
           const SizedBox(height: 8),
           RadioGroup<SortBy>(
             groupValue: _sortBy,
@@ -99,7 +103,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
                 (s) => RadioListTile<SortBy>(
                   dense: true,
                   contentPadding: EdgeInsets.zero,
-                  title: Text(s.label),
+                  title: Text(sortByLabel(l10n, s)),
                   value: s,
                 ),
               ).toList(),
@@ -108,10 +112,12 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
           const SizedBox(height: 12),
           Row(
             children: [
-              _label(context, 'Min. Puan'),
+              _label(context, l10n.filterMinRating),
               const Spacer(),
               Text(
-                _minRating == 0 ? 'Hepsi' : _minRating.toStringAsFixed(1),
+                _minRating == 0
+                    ? l10n.filterRatingAll
+                    : _minRating.toStringAsFixed(1),
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: Theme.of(context).colorScheme.primary,
                       fontWeight: FontWeight.w600,
@@ -127,14 +133,14 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
             onChanged: (v) => setState(() => _minRating = v),
           ),
           const SizedBox(height: 8),
-          _label(context, 'Yıl (isteğe bağlı)'),
+          _label(context, l10n.filterYear),
           const SizedBox(height: 8),
           TextField(
             controller: _yearController,
             keyboardType: TextInputType.number,
-            decoration: const InputDecoration(
-              hintText: 'örn. 2023',
-              prefixIcon: Icon(Icons.calendar_today_outlined),
+            decoration: InputDecoration(
+              hintText: l10n.filterYearHint,
+              prefixIcon: const Icon(Icons.calendar_today_outlined),
             ),
           ),
           const SizedBox(height: 24),
@@ -143,7 +149,7 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
               minimumSize: const Size.fromHeight(48),
             ),
             onPressed: _apply,
-            child: const Text('Uygula'),
+            child: Text(l10n.filterApply),
           ),
         ],
       ),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../../core/l10n.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../shared/widgets/error_view.dart';
@@ -30,7 +31,7 @@ class DetailScreen extends ConsumerWidget {
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, _) => Center(
           child: ErrorView(
-            message: error.toString(),
+            message: localizeError(context.l10n, error),
             onRetry: () =>
                 ref.invalidate(detailProvider(DetailRef(mediaType, id))),
           ),
@@ -121,7 +122,9 @@ class _DetailContent extends ConsumerWidget {
                               : Icons.favorite_border_rounded,
                         ),
                         label: Text(
-                          isFavorite ? 'Favorilerden Çıkar' : 'Favorilere Ekle',
+                          isFavorite
+                              ? context.l10n.detailFavoriteRemove
+                              : context.l10n.detailFavoriteAdd,
                         ),
                       ),
                     ),
@@ -144,7 +147,7 @@ class _DetailContent extends ConsumerWidget {
                 if (detail.overview.isNotEmpty) ...[
                   const SizedBox(height: 20),
                   Text(
-                    'Özet',
+                    context.l10n.detailOverview,
                     style: Theme.of(context)
                         .textTheme
                         .titleMedium
@@ -195,7 +198,7 @@ class _TrailerButton extends StatelessWidget {
         backgroundColor: Colors.red.shade700,
         foregroundColor: Colors.white,
       ),
-      tooltip: 'Fragmanı İzle',
+      tooltip: context.l10n.detailTrailerTooltip,
       icon: const Icon(Icons.play_arrow_rounded),
       onPressed: () => launchUrl(
         Uri.parse('https://www.youtube.com/watch?v=$trailerKey'),
@@ -216,7 +219,9 @@ class _MetaRow extends StatelessWidget {
       RatingBadge(voteAverage: detail.voteAverage),
       if (detail.year != null) _MetaText(detail.year!),
       if (detail.formattedRuntime != null) _MetaText(detail.formattedRuntime!),
-      _MetaText(detail.mediaType == MediaType.movie ? 'Film' : 'Dizi'),
+      _MetaText(detail.mediaType == MediaType.movie
+          ? context.l10n.typeMovie
+          : context.l10n.typeTv),
     ];
     return Wrap(
       spacing: 12,
@@ -257,7 +262,7 @@ class _CastSection extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
           child: Text(
-            'Oyuncular',
+            context.l10n.detailCast,
             style: Theme.of(context)
                 .textTheme
                 .titleMedium
@@ -343,7 +348,7 @@ class _WatchProvidersSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'İzleme Platformları',
+            context.l10n.detailWatchProviders,
             style: Theme.of(context)
                 .textTheme
                 .titleMedium
@@ -415,7 +420,9 @@ class _SimilarSection extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 20, 16, 12),
           child: Text(
-            mediaType == MediaType.movie ? 'Benzer Filmler' : 'Benzer Diziler',
+            mediaType == MediaType.movie
+                ? context.l10n.detailSimilarMovies
+                : context.l10n.detailSimilarTv,
             style: Theme.of(context)
                 .textTheme
                 .titleMedium

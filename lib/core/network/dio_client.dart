@@ -3,20 +3,37 @@ import 'package:dio/dio.dart';
 import '../config/env.dart';
 import '../constants/api_constants.dart';
 
-/// Thrown when a TMDB request fails, carrying a user-friendly Turkish message.
+/// Categorizes a TMDB request failure so the UI can show a localized message.
+enum ApiErrorKind {
+  noApiKey,
+  timeout,
+  noConnection,
+  invalidApiKey,
+  server,
+  unknown,
+}
+
+/// Thrown when a TMDB request fails.
+///
+/// Carries a language-agnostic [kind] (and optional HTTP [statusCode]); the
+/// presentation layer turns it into a localized message at display time.
 class ApiException implements Exception {
-  ApiException(this.message);
-  final String message;
+  ApiException(this.kind, {this.statusCode});
+
+  final ApiErrorKind kind;
+  final int? statusCode;
 
   @override
-  String toString() => message;
+  String toString() =>
+      'ApiException(${kind.name}${statusCode != null ? ', $statusCode' : ''})';
 }
 
 /// Builds a configured [Dio] instance for the TMDB API.
 ///
 /// An interceptor automatically appends the API key and language to every
-/// request, so feature code never touches the key directly.
-Dio createDioClient() {
+/// request, so feature code never touches the key directly. [languageTag] sets
+/// the TMDB `language` query value (e.g. `tr-TR`, `en-US`).
+Dio createDioClient({String languageTag = ApiConstants.language}) {
   final dio = Dio(
     BaseOptions(
       baseUrl: ApiConstants.baseUrl,
@@ -34,12 +51,9 @@ Dio createDioClient() {
         );
         options.queryParameters.putIfAbsent(
           'language',
-          () => ApiConstants.language,
+          () => languageTag,
         );
         handler.next(options);
-      },
-      onError: (error, handler) {
-        handler.next(error.copyWith(message: _messageFor(error)));
       },
     ),
   );
@@ -47,24 +61,21 @@ Dio createDioClient() {
   return dio;
 }
 
-String _messageFor(DioException error) {
-  if (!AppEnv.hasApiKey) {
-    return 'TMDB API anahtarı bulunamadı. Lütfen .env dosyasına anahtarınızı ekleyin.';
-  }
+/// Classifies a [DioException] into an [ApiErrorKind].
+ApiErrorKind apiErrorKindFor(DioException error) {
+  if (!AppEnv.hasApiKey) return ApiErrorKind.noApiKey;
   switch (error.type) {
     case DioExceptionType.connectionTimeout:
     case DioExceptionType.receiveTimeout:
     case DioExceptionType.sendTimeout:
-      return 'Bağlantı zaman aşımına uğradı. Lütfen tekrar deneyin.';
+      return ApiErrorKind.timeout;
     case DioExceptionType.connectionError:
-      return 'İnternet bağlantısı yok. Bağlantınızı kontrol edin.';
+      return ApiErrorKind.noConnection;
     case DioExceptionType.badResponse:
-      final code = error.response?.statusCode;
-      if (code == 401) {
-        return 'API anahtarı geçersiz. .env dosyasındaki anahtarı kontrol edin.';
-      }
-      return 'Sunucu hatası ($code). Lütfen daha sonra tekrar deneyin.';
+      return error.response?.statusCode == 401
+          ? ApiErrorKind.invalidApiKey
+          : ApiErrorKind.server;
     default:
-      return 'Beklenmeyen bir hata oluştu. Lütfen tekrar deneyin.';
+      return ApiErrorKind.unknown;
   }
 }

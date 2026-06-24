@@ -1,17 +1,14 @@
 import 'media_item.dart';
 
 enum SortBy {
-  popularity('popularity.desc', 'Popülariteye Göre'),
-  rating('vote_average.desc', 'Puana Göre'),
-  newest('primary_release_date.desc', 'En Yeni');
+  popularity('popularity.desc'),
+  rating('vote_average.desc'),
+  newest('primary_release_date.desc');
 
-  const SortBy(this.apiValue, this.label);
+  const SortBy(this.apiValue);
   final String apiValue;
-  final String label;
 
-  String tvApiValue() => this == newest
-      ? 'first_air_date.desc'
-      : apiValue;
+  String tvApiValue() => this == newest ? 'first_air_date.desc' : apiValue;
 }
 
 class DiscoverFilter {
@@ -29,14 +26,4 @@ class DiscoverFilter {
 
   String get resolvedSortBy =>
       mediaType == MediaType.tv ? sortBy.tvApiValue() : sortBy.apiValue;
-
-  String get screenTitle {
-    if (sortBy == SortBy.rating) {
-      return mediaType == MediaType.movie ? 'En İyi Filmler' : 'En İyi Diziler';
-    }
-    if (sortBy == SortBy.newest) {
-      return mediaType == MediaType.movie ? 'En Yeni Filmler' : 'En Yeni Diziler';
-    }
-    return mediaType == MediaType.movie ? 'Popüler Filmler' : 'Popüler Diziler';
-  }
 }

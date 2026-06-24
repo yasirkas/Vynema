@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/l10n.dart';
 import '../../../../core/providers.dart';
 import '../../../../shared/widgets/error_view.dart';
 import '../../../../shared/widgets/loading_grid.dart';
@@ -34,7 +35,7 @@ class _GenreScreenState extends ConsumerState<GenreScreen> {
   int _page = 0;
   bool _hasMore = true;
   bool _inFlight = false;
-  String? _error;
+  Object? _error;
 
   @override
   void initState() {
@@ -73,7 +74,7 @@ class _GenreScreenState extends ConsumerState<GenreScreen> {
       });
     } catch (e) {
       if (!mounted) return;
-      setState(() => _error = e.toString());
+      setState(() => _error = e);
     } finally {
       _inFlight = false;
       if (mounted) _loadingNotifier.value = false;
@@ -90,7 +91,9 @@ class _GenreScreenState extends ConsumerState<GenreScreen> {
             padding: const EdgeInsets.only(right: 16),
             child: Chip(
               label: Text(
-                widget.mediaType == MediaType.movie ? 'Film' : 'Dizi',
+                widget.mediaType == MediaType.movie
+                    ? context.l10n.typeMovie
+                    : context.l10n.typeTv,
                 style: const TextStyle(fontSize: 12),
               ),
             ),
@@ -109,7 +112,10 @@ class _GenreScreenState extends ConsumerState<GenreScreen> {
         builder: (context, loading, _) {
           if (loading) return const LoadingGrid();
           if (_error != null) {
-            return ErrorView(message: _error!, onRetry: _loadMore);
+            return ErrorView(
+              message: localizeError(context.l10n, _error!),
+              onRetry: _loadMore,
+            );
           }
           return const SizedBox.shrink();
         },

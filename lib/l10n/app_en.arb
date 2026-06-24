@@ -1,0 +1,100 @@
+{
+  "@@locale": "en",
+  "appTitle": "Vynema",
+
+  "navDiscover": "Discover",
+  "navSearch": "Search",
+  "navFavorites": "Favorites",
+
+  "filterTooltip": "Filter",
+  "themeToggleTooltip": "Toggle theme",
+  "settingsTooltip": "Settings",
+
+  "carouselTrending": "Trending This Week",
+  "carouselNowPlaying": "Now Playing",
+  "carouselTopRated": "Top Rated",
+
+  "titlePopularMovies": "Popular Movies",
+  "titlePopularTv": "Popular TV Shows",
+  "titleTopMovies": "Top Rated Movies",
+  "titleTopTv": "Top Rated TV Shows",
+  "titleNewestMovies": "Newest Movies",
+  "titleNewestTv": "Newest TV Shows",
+
+  "searchTitle": "Search",
+  "searchHint": "Search movies or TV shows...",
+  "searchPrompt": "Type a movie or TV show name to explore.",
+  "searchNoResults": "No results found for \"{query}\".",
+  "@searchNoResults": {
+    "placeholders": {
+      "query": { "type": "String" }
+    }
+  },
+
+  "favoritesTitle": "Favorites",
+  "favoritesEmptyTitle": "You haven't added any favorites yet.",
+  "favoritesEmptySubtitle": "Tap the heart icon on movies and shows you like to add them here.",
+
+  "detailFavoriteAdd": "Add to Favorites",
+  "detailFavoriteRemove": "Remove from Favorites",
+  "detailOverview": "Overview",
+  "detailTrailerTooltip": "Watch Trailer",
+  "detailWatchProviders": "Where to Watch",
+  "detailCast": "Cast",
+  "detailSimilarMovies": "Similar Movies",
+  "detailSimilarTv": "Similar TV Shows",
+
+  "typeMovie": "Movie",
+  "typeTv": "TV Show",
+
+  "personBiography": "Biography",
+  "personFilmography": "Filmography",
+  "bioReadMore": "Read more",
+  "bioShowLess": "Show less",
+
+  "deptActing": "Actor",
+  "deptDirecting": "Director",
+  "deptWriting": "Writer",
+  "deptProduction": "Producer",
+  "deptSound": "Sound",
+  "deptCamera": "Camera",
+
+  "filterTitle": "Filter",
+  "filterContentType": "Content Type",
+  "filterSortBy": "Sort By",
+  "filterMinRating": "Min. Rating",
+  "filterRatingAll": "All",
+  "filterYear": "Year (optional)",
+  "filterYearHint": "e.g. 2023",
+  "filterApply": "Apply",
+
+  "sortPopularity": "Popularity",
+  "sortRating": "Rating",
+  "sortNewest": "Newest",
+
+  "emptyContent": "No content found.",
+  "retry": "Retry",
+
+  "errorNoApiKey": "TMDB API key not found. Please add your key to the .env file.",
+  "errorTimeout": "The connection timed out. Please try again.",
+  "errorNoConnection": "No internet connection. Check your connection.",
+  "errorInvalidApiKey": "Invalid API key. Check the key in your .env file.",
+  "errorServer": "Server error ({code}). Please try again later.",
+  "@errorServer": {
+    "placeholders": {
+      "code": { "type": "String" }
+    }
+  },
+  "errorUnknown": "An unexpected error occurred. Please try again.",
+
+  "settingsTitle": "Settings",
+  "settingsAppearance": "Appearance",
+  "settingsTheme": "Theme",
+  "settingsThemeSubtitle": "Choose light or dark mode",
+  "themeDark": "Dark",
+  "themeLight": "Light",
+  "settingsLanguage": "Language",
+  "settingsLanguageSubtitle": "Choose the app language",
+  "languageTurkish": "Türkçe",
+  "languageEnglish": "English"
+}

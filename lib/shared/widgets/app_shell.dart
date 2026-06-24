@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/l10n.dart';
+
 /// Bottom-navigation scaffold wrapping the three main tabs.
 class AppShell extends StatelessWidget {
   const AppShell({super.key, required this.navigationShell});
@@ -9,6 +11,7 @@ class AppShell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = context.l10n;
     return Scaffold(
       body: navigationShell,
       bottomNavigationBar: NavigationBar(
@@ -18,21 +21,21 @@ class AppShell extends StatelessWidget {
           // Re-tapping the active tab pops to its root.
           initialLocation: index == navigationShell.currentIndex,
         ),
-        destinations: const [
+        destinations: [
           NavigationDestination(
-            icon: Icon(Icons.explore_outlined),
-            selectedIcon: Icon(Icons.explore_rounded),
-            label: 'Keşfet',
+            icon: const Icon(Icons.explore_outlined),
+            selectedIcon: const Icon(Icons.explore_rounded),
+            label: l10n.navDiscover,
           ),
           NavigationDestination(
-            icon: Icon(Icons.search_outlined),
-            selectedIcon: Icon(Icons.search_rounded),
-            label: 'Ara',
+            icon: const Icon(Icons.search_outlined),
+            selectedIcon: const Icon(Icons.search_rounded),
+            label: l10n.navSearch,
           ),
           NavigationDestination(
-            icon: Icon(Icons.favorite_outline_rounded),
-            selectedIcon: Icon(Icons.favorite_rounded),
-            label: 'Favoriler',
+            icon: const Icon(Icons.favorite_outline_rounded),
+            selectedIcon: const Icon(Icons.favorite_rounded),
+            label: l10n.navFavorites,
           ),
         ],
       ),

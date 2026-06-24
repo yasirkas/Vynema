@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/l10n.dart';
 import '../../../../shared/widgets/error_view.dart';
 import '../../../../shared/widgets/loading_grid.dart';
 import '../../data/models/media_item.dart';
@@ -33,13 +34,13 @@ class MediaCarousel extends ConsumerWidget {
           loading: () => LoadingRow(height: height),
           error: (error, _) => SizedBox(
             height: height,
-            child: ErrorView(message: error.toString()),
+            child: ErrorView(message: localizeError(context.l10n, error)),
           ),
           data: (items) {
             if (items.isEmpty) {
               return SizedBox(
                 height: height,
-                child: const Center(child: Text('İçerik bulunamadı.')),
+                child: Center(child: Text(context.l10n.emptyContent)),
               );
             }
             return SizedBox(

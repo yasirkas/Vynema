@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/l10n.dart';
 import '../../../../core/providers.dart';
 import '../../../../shared/widgets/error_view.dart';
 import '../../../../shared/widgets/loading_grid.dart';
 import '../../data/models/discover_filter.dart';
 import '../../data/models/media_item.dart';
+import '../discover_l10n.dart';
 import '../widgets/media_card.dart';
 
 class DiscoverScreen extends ConsumerStatefulWidget {
@@ -25,7 +27,7 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
   int _page = 0;
   bool _hasMore = true;
   bool _inFlight = false;
-  String? _error;
+  Object? _error;
 
   DiscoverFilter get _f => widget.filter;
 
@@ -70,7 +72,7 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
       });
     } catch (e) {
       if (!mounted) return;
-      setState(() => _error = e.toString());
+      setState(() => _error = e);
     } finally {
       _inFlight = false;
       if (mounted) _loadingNotifier.value = false;
@@ -80,7 +82,7 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(_f.screenTitle)),
+      appBar: AppBar(title: Text(discoverScreenTitle(context.l10n, _f))),
       body: _buildBody(),
     );
   }
@@ -91,7 +93,12 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
         valueListenable: _loadingNotifier,
         builder: (context, loading, _) {
           if (loading) return const LoadingGrid();
-          if (_error != null) return ErrorView(message: _error!, onRetry: _loadMore);
+          if (_error != null) {
+            return ErrorView(
+              message: localizeError(context.l10n, _error!),
+              onRetry: _loadMore,
+            );
+          }
           return const SizedBox.shrink();
         },
       );
