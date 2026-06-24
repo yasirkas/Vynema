@@ -11,6 +11,7 @@ import '../../features/discover/presentation/screens/person_screen.dart';
 import '../../features/discover/presentation/screens/search_screen.dart';
 import '../../features/favorites/presentation/screens/favorites_screen.dart';
 import '../../features/settings/presentation/screens/settings_screen.dart';
+import '../../features/splash/presentation/screens/splash_screen.dart';
 import '../../shared/widgets/app_shell.dart';
 
 /// Application route configuration.
@@ -21,8 +22,13 @@ class AppRouter {
   const AppRouter._();
 
   static final GoRouter router = GoRouter(
-    initialLocation: '/home',
+    initialLocation: '/splash',
     routes: [
+      GoRoute(
+        path: '/splash',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const SplashScreen(),
+      ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) =>
             AppShell(navigationShell: navigationShell),
