@@ -18,8 +18,10 @@
   "titlePopularTv": "Popüler Diziler",
   "titleTopMovies": "En İyi Filmler",
   "titleTopTv": "En İyi Diziler",
-  "titleNewestMovies": "En Yeni Filmler",
-  "titleNewestTv": "En Yeni Diziler",
+  "titleUpcomingMovies": "Yakında Çıkacak Filmler",
+  "titleUpcomingTv": "Yakında Çıkacak Diziler",
+  "titleRecentMovies": "Yeni Çıkan Filmler",
+  "titleRecentTv": "Yeni Çıkan Diziler",
 
   "searchTitle": "Ara",
   "searchHint": "Film veya dizi ara...",
@@ -65,7 +67,8 @@
 
   "sortPopularity": "Popülariteye Göre",
   "sortRating": "Puana Göre",
-  "sortNewest": "En Yeni",
+  "sortUpcoming": "Yakında Çıkacaklar",
+  "sortRecentlyReleased": "Yeni Çıkanlar",
 
   "emptyContent": "İçerik bulunamadı.",
   "retry": "Tekrar Dene",

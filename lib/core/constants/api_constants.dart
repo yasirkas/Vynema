@@ -27,6 +27,8 @@ class ApiConstants {
   static String personDetail(int id) => '/person/$id';
 
   static const String nowPlayingMovies = '/movie/now_playing';
+  static const String upcomingMovies = '/movie/upcoming';
+  static const String onAirTv = '/tv/on_the_air';
   static const String topRatedMovies = '/movie/top_rated';
   static const String topRatedTv = '/tv/top_rated';
 

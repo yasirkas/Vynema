@@ -56,13 +56,21 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
     _inFlight = true;
     _loadingNotifier.value = true;
     try {
-      final result = await ref.read(mediaRepositoryProvider).discoverItems(
+      final repo = ref.read(mediaRepositoryProvider);
+      final nextPage = _page + 1;
+      final result = switch (_f.sortBy) {
+        SortBy.upcoming =>
+          await repo.getUpcomingPaged(_f.mediaType, page: nextPage),
+        SortBy.recentlyReleased =>
+          await repo.getRecentlyReleasedPaged(_f.mediaType, page: nextPage),
+        _ => await repo.discoverItems(
             type: _f.mediaType,
             sortBy: _f.resolvedSortBy,
             minRating: _f.minRating > 0 ? _f.minRating : null,
             year: _f.year,
-            page: _page + 1,
-          );
+            page: nextPage,
+          ),
+      };
       if (!mounted) return;
       setState(() {
         _items.addAll(result.items);

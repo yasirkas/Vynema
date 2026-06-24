@@ -18,8 +18,10 @@
   "titlePopularTv": "Popular TV Shows",
   "titleTopMovies": "Top Rated Movies",
   "titleTopTv": "Top Rated TV Shows",
-  "titleNewestMovies": "Newest Movies",
-  "titleNewestTv": "Newest TV Shows",
+  "titleUpcomingMovies": "Upcoming Movies",
+  "titleUpcomingTv": "Upcoming TV Shows",
+  "titleRecentMovies": "Recently Released Movies",
+  "titleRecentTv": "Recently Released TV Shows",
 
   "searchTitle": "Search",
   "searchHint": "Search movies or TV shows...",
@@ -70,7 +72,8 @@
 
   "sortPopularity": "Popularity",
   "sortRating": "Rating",
-  "sortNewest": "Newest",
+  "sortUpcoming": "Upcoming",
+  "sortRecentlyReleased": "Recently Released",
 
   "emptyContent": "No content found.",
   "retry": "Retry",

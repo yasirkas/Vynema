@@ -47,7 +47,20 @@ class MediaRepository {
         minRating: minRating,
         year: year,
         page: page,
+        extraParams: null,
       );
+
+  Future<({List<MediaItem> items, bool hasMore})> getUpcomingPaged(
+    MediaType type, {
+    int page = 1,
+  }) =>
+      _remote.getUpcomingPaged(type, page: page);
+
+  Future<({List<MediaItem> items, bool hasMore})> getRecentlyReleasedPaged(
+    MediaType type, {
+    int page = 1,
+  }) =>
+      _remote.getRecentlyReleasedPaged(type, page: page);
 
   Future<({List<MediaItem> items, bool hasMore})> discoverByGenre(
     MediaType type,
