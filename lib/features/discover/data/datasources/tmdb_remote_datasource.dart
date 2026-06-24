@@ -76,7 +76,9 @@ class TmdbRemoteDataSource {
     try {
       final response = await _dio.get(
         path,
-        queryParameters: {'append_to_response': 'credits'},
+        queryParameters: {
+          'append_to_response': 'credits,videos,similar,watch/providers',
+        },
       );
       return MediaDetail.fromJson(
         response.data as Map<String, dynamic>,

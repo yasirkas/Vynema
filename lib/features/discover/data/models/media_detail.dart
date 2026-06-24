@@ -2,8 +2,8 @@ import '../../../../core/constants/api_constants.dart';
 import 'cast_member.dart';
 import 'genre.dart';
 import 'media_item.dart';
+import 'watch_provider.dart';
 
-/// Full detail for a movie or TV show, including genres and top cast.
 class MediaDetail {
   const MediaDetail({
     required this.id,
@@ -19,6 +19,9 @@ class MediaDetail {
     required this.tagline,
     required this.genres,
     required this.cast,
+    required this.trailerKey,
+    required this.similar,
+    required this.watchProviders,
   });
 
   final int id;
@@ -34,6 +37,9 @@ class MediaDetail {
   final String tagline;
   final List<Genre> genres;
   final List<CastMember> cast;
+  final String? trailerKey;
+  final List<MediaItem> similar;
+  final List<WatchProvider> watchProviders;
 
   String? posterUrl({String size = ApiConstants.posterSize}) =>
       ApiConstants.imageUrl(posterPath, size: size);
@@ -46,7 +52,6 @@ class MediaDetail {
     return releaseDate!.substring(0, 4);
   }
 
-  /// Human-readable runtime, e.g. "2s 14dk", or null when unknown.
   String? get formattedRuntime {
     final r = runtimeMinutes;
     if (r == null || r <= 0) return null;
@@ -56,7 +61,6 @@ class MediaDetail {
     return '${m}dk';
   }
 
-  /// Builds a lightweight [MediaItem] (used for favorite toggling on detail).
   MediaItem toMediaItem() => MediaItem(
         id: id,
         mediaType: mediaType,
@@ -75,7 +79,6 @@ class MediaDetail {
     final title = (json['title'] ?? json['name'] ?? '') as String;
     final date = (json['release_date'] ?? json['first_air_date']) as String?;
 
-    // Movies expose `runtime`; TV shows expose `episode_run_time` (a list).
     int? runtime = (json['runtime'] as num?)?.toInt();
     if (runtime == null) {
       final episodeRuntimes = json['episode_run_time'] as List<dynamic>?;
@@ -88,10 +91,40 @@ class MediaDetail {
         .map((g) => Genre.fromJson(g as Map<String, dynamic>))
         .toList();
 
-    final castJson =
-        (json['credits']?['cast'] as List<dynamic>? ?? []).cast<Map<String, dynamic>>();
-    final cast =
-        castJson.take(20).map(CastMember.fromJson).toList();
+    final castJson = (json['credits']?['cast'] as List<dynamic>? ?? [])
+        .cast<Map<String, dynamic>>();
+    final cast = castJson.take(20).map(CastMember.fromJson).toList();
+
+    // Trailer: first YouTube Trailer, fall back to first YouTube video.
+    final videoResults = (json['videos']?['results'] as List<dynamic>? ?? [])
+        .cast<Map<String, dynamic>>();
+    final trailer = videoResults.where(
+      (v) => v['site'] == 'YouTube' && v['type'] == 'Trailer',
+    ).firstOrNull;
+    final trailerKey = (trailer ?? videoResults.where((v) => v['site'] == 'YouTube').firstOrNull)
+        ?['key'] as String?;
+
+    // Similar content (first 12).
+    final similar = (json['similar']?['results'] as List<dynamic>? ?? [])
+        .cast<Map<String, dynamic>>()
+        .take(12)
+        .map((j) => MediaItem.fromJson(j, fallbackType: mediaType))
+        .toList();
+
+    // Watch providers: TR first, US fallback, flatrate only.
+    final providerResults =
+        json['watch/providers']?['results'] as Map<String, dynamic>?;
+    List<WatchProvider> watchProviders = [];
+    if (providerResults != null) {
+      final region = (providerResults['TR'] ?? providerResults['US'])
+          as Map<String, dynamic>?;
+      if (region != null) {
+        watchProviders = (region['flatrate'] as List<dynamic>? ?? [])
+            .cast<Map<String, dynamic>>()
+            .map(WatchProvider.fromJson)
+            .toList();
+      }
+    }
 
     return MediaDetail(
       id: json['id'] as int,
@@ -107,6 +140,9 @@ class MediaDetail {
       tagline: (json['tagline'] ?? '') as String,
       genres: genres,
       cast: cast,
+      trailerKey: trailerKey,
+      similar: similar,
+      watchProviders: watchProviders,
     );
   }
 }
