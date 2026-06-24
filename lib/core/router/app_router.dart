@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/discover/data/models/media_item.dart';
+import '../../features/discover/data/models/discover_filter.dart';
 import '../../features/discover/presentation/screens/detail_screen.dart';
+import '../../features/discover/presentation/screens/discover_screen.dart';
 import '../../features/discover/presentation/screens/genre_screen.dart';
 import '../../features/discover/presentation/screens/home_screen.dart';
 import '../../features/discover/presentation/screens/person_screen.dart';
@@ -60,6 +62,13 @@ class AppRouter {
         },
       ),
       GoRoute(
+        path: '/discover',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => DiscoverScreen(
+          filter: state.extra! as DiscoverFilter,
+        ),
+      ),
+      GoRoute(
         path: '/person/:id',
         parentNavigatorKey: _rootNavigatorKey,
         builder: (context, state) {
@@ -97,4 +106,7 @@ extension MediaNavigation on BuildContext {
       );
 
   void goToPerson(int personId) => push('/person/$personId');
+
+  void goToDiscover(DiscoverFilter filter) =>
+      push('/discover', extra: filter);
 }

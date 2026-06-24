@@ -24,6 +24,18 @@ final genresProvider =
 
 typedef GenreParams = ({MediaType type, int genreId});
 
+final nowPlayingProvider = FutureProvider.autoDispose<List<MediaItem>>(
+  (ref) => ref.watch(mediaRepositoryProvider).getNowPlaying(),
+);
+
+final topRatedMoviesProvider = FutureProvider.autoDispose<List<MediaItem>>(
+  (ref) => ref.watch(mediaRepositoryProvider).getTopRatedMovies(),
+);
+
+final topRatedTvProvider = FutureProvider.autoDispose<List<MediaItem>>(
+  (ref) => ref.watch(mediaRepositoryProvider).getTopRatedTv(),
+);
+
 final personProvider = FutureProvider.autoDispose.family<Person, int>(
   (ref, id) => ref.watch(mediaRepositoryProvider).getPerson(id),
 );

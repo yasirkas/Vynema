@@ -30,6 +30,25 @@ class MediaRepository {
 
   Future<Person> getPerson(int id) => _remote.getPerson(id);
 
+  Future<List<MediaItem>> getNowPlaying() => _remote.getNowPlaying();
+  Future<List<MediaItem>> getTopRatedMovies() => _remote.getTopRatedMovies();
+  Future<List<MediaItem>> getTopRatedTv() => _remote.getTopRatedTv();
+
+  Future<({List<MediaItem> items, bool hasMore})> discoverItems({
+    required MediaType type,
+    String sortBy = 'popularity.desc',
+    double? minRating,
+    int? year,
+    int page = 1,
+  }) =>
+      _remote.discoverItems(
+        type: type,
+        sortBy: sortBy,
+        minRating: minRating,
+        year: year,
+        page: page,
+      );
+
   Future<({List<MediaItem> items, bool hasMore})> discoverByGenre(
     MediaType type,
     int genreId, {

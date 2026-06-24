@@ -4,11 +4,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/providers.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../data/models/discover_filter.dart';
 import '../../data/models/media_item.dart';
 import '../providers/discover_providers.dart';
+import '../widgets/filter_bottom_sheet.dart';
 import '../widgets/media_carousel.dart';
 
-/// Discover tab — trending and popular carousels.
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
@@ -28,6 +29,8 @@ class HomeScreen extends ConsumerWidget {
             ref.invalidate(trendingProvider);
             ref.invalidate(popularMoviesProvider);
             ref.invalidate(popularTvProvider);
+            ref.invalidate(nowPlayingProvider);
+            ref.invalidate(topRatedMoviesProvider);
           },
           child: CustomScrollView(
             slivers: [
@@ -36,6 +39,11 @@ class HomeScreen extends ConsumerWidget {
                 backgroundColor: Colors.transparent,
                 title: const _BrandTitle(),
                 actions: [
+                  IconButton(
+                    tooltip: 'Filtrele',
+                    icon: const Icon(Icons.tune_rounded),
+                    onPressed: () => _openFilter(context),
+                  ),
                   IconButton(
                     tooltip: 'Tema değiştir',
                     onPressed: () =>
@@ -57,8 +65,20 @@ class HomeScreen extends ConsumerWidget {
               ),
               SliverToBoxAdapter(
                 child: MediaCarousel(
+                  title: 'Vizyonda',
+                  provider: nowPlayingProvider,
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: MediaCarousel(
                   title: 'Popüler Filmler',
                   provider: popularMoviesProvider,
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: MediaCarousel(
+                  title: 'En Çok Beğenilenler',
+                  provider: topRatedMoviesProvider,
                 ),
               ),
               SliverToBoxAdapter(
@@ -73,6 +93,16 @@ class HomeScreen extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _openFilter(BuildContext context) async {
+    final filter = await FilterBottomSheet.show(
+      context,
+      initial: const DiscoverFilter(),
+    );
+    if (filter != null && context.mounted) {
+      context.goToDiscover(filter);
+    }
   }
 }
 

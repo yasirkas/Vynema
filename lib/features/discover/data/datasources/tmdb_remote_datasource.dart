@@ -30,6 +30,49 @@ class TmdbRemoteDataSource {
     );
   }
 
+  Future<List<MediaItem>> getNowPlaying() =>
+      _fetchList(ApiConstants.nowPlayingMovies, fallbackType: MediaType.movie);
+
+  Future<List<MediaItem>> getTopRatedMovies() =>
+      _fetchList(ApiConstants.topRatedMovies, fallbackType: MediaType.movie);
+
+  Future<List<MediaItem>> getTopRatedTv() =>
+      _fetchList(ApiConstants.topRatedTv, fallbackType: MediaType.tv);
+
+  Future<({List<MediaItem> items, bool hasMore})> discoverItems({
+    required MediaType type,
+    String sortBy = 'popularity.desc',
+    double? minRating,
+    int? year,
+    int page = 1,
+  }) async {
+    final path = type == MediaType.movie
+        ? ApiConstants.discoverMovie
+        : ApiConstants.discoverTv;
+    final params = <String, dynamic>{'sort_by': sortBy, 'page': page};
+    if (minRating != null && minRating > 0) {
+      params['vote_average.gte'] = minRating;
+      params['vote_count.gte'] = 50;
+    }
+    if (year != null) {
+      params[type == MediaType.movie
+          ? 'primary_release_year'
+          : 'first_air_date_year'] = year;
+    }
+    try {
+      final response = await _dio.get(path, queryParameters: params);
+      final totalPages = (response.data['total_pages'] as int?) ?? 1;
+      final results = (response.data['results'] as List<dynamic>? ?? [])
+          .cast<Map<String, dynamic>>()
+          .take(18)
+          .map((j) => MediaItem.fromJson(j, fallbackType: type))
+          .toList();
+      return (items: results, hasMore: page < totalPages);
+    } on DioException catch (e) {
+      throw ApiException(e.message ?? 'İçerik yüklenemedi.');
+    }
+  }
+
   Future<List<Genre>> getGenres(MediaType type) async {
     final path = type == MediaType.movie
         ? ApiConstants.genreMovieList

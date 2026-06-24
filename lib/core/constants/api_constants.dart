@@ -26,6 +26,10 @@ class ApiConstants {
 
   static String personDetail(int id) => '/person/$id';
 
+  static const String nowPlayingMovies = '/movie/now_playing';
+  static const String topRatedMovies = '/movie/top_rated';
+  static const String topRatedTv = '/tv/top_rated';
+
   // --- Image size segments ---
   static const String posterSize = 'w500';
   static const String posterSizeSmall = 'w342';
