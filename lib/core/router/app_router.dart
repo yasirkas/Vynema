@@ -5,6 +5,7 @@ import '../../features/discover/data/models/media_item.dart';
 import '../../features/discover/presentation/screens/detail_screen.dart';
 import '../../features/discover/presentation/screens/genre_screen.dart';
 import '../../features/discover/presentation/screens/home_screen.dart';
+import '../../features/discover/presentation/screens/person_screen.dart';
 import '../../features/discover/presentation/screens/search_screen.dart';
 import '../../features/favorites/presentation/screens/favorites_screen.dart';
 import '../../shared/widgets/app_shell.dart';
@@ -59,6 +60,14 @@ class AppRouter {
         },
       ),
       GoRoute(
+        path: '/person/:id',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) {
+          final id = int.parse(state.pathParameters['id']!);
+          return PersonScreen(personId: id);
+        },
+      ),
+      GoRoute(
         path: '/genre',
         parentNavigatorKey: _rootNavigatorKey,
         builder: (context, state) {
@@ -86,4 +95,6 @@ extension MediaNavigation on BuildContext {
         '/genre',
         extra: {'type': type, 'genreId': genreId, 'genreName': genreName},
       );
+
+  void goToPerson(int personId) => push('/person/$personId');
 }

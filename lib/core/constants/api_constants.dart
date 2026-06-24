@@ -24,6 +24,8 @@ class ApiConstants {
   static const String discoverMovie = '/discover/movie';
   static const String discoverTv = '/discover/tv';
 
+  static String personDetail(int id) => '/person/$id';
+
   // --- Image size segments ---
   static const String posterSize = 'w500';
   static const String posterSizeSmall = 'w342';

@@ -5,6 +5,7 @@ import '../../../../core/network/dio_client.dart';
 import '../models/genre.dart';
 import '../models/media_detail.dart';
 import '../models/media_item.dart';
+import '../models/person.dart';
 
 /// Talks to the TMDB REST API and maps responses into domain models.
 class TmdbRemoteDataSource {
@@ -66,6 +67,18 @@ class TmdbRemoteDataSource {
       return (items: results, hasMore: page < totalPages);
     } on DioException catch (e) {
       throw ApiException(e.message ?? 'İçerik yüklenemedi.');
+    }
+  }
+
+  Future<Person> getPerson(int id) async {
+    try {
+      final response = await _dio.get(
+        ApiConstants.personDetail(id),
+        queryParameters: {'append_to_response': 'combined_credits'},
+      );
+      return Person.fromJson(response.data as Map<String, dynamic>);
+    } on DioException catch (e) {
+      throw ApiException(e.message ?? 'Kişi yüklenemedi.');
     }
   }
 

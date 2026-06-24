@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../../core/router/app_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../shared/widgets/error_view.dart';
 import '../../../favorites/presentation/providers/favorites_provider.dart';
@@ -286,41 +287,44 @@ class _CastCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final url = member.profileUrl();
-    return SizedBox(
-      width: 84,
-      child: Column(
-        children: [
-          CircleAvatar(
-            radius: 38,
-            backgroundColor: AppColors.darkSurfaceVariant,
-            backgroundImage:
-                url != null ? CachedNetworkImageProvider(url) : null,
-            child: url == null
-                ? const Icon(Icons.person_rounded, size: 32)
-                : null,
-          ),
-          const SizedBox(height: 6),
-          Text(
-            member.name,
-            maxLines: 2,
-            textAlign: TextAlign.center,
-            overflow: TextOverflow.ellipsis,
-            style: Theme.of(context)
-                .textTheme
-                .bodySmall
-                ?.copyWith(fontWeight: FontWeight.w600),
-          ),
-          if (member.character.isNotEmpty)
+    return GestureDetector(
+      onTap: () => context.goToPerson(member.id),
+      child: SizedBox(
+        width: 84,
+        child: Column(
+          children: [
+            CircleAvatar(
+              radius: 38,
+              backgroundColor: AppColors.darkSurfaceVariant,
+              backgroundImage:
+                  url != null ? CachedNetworkImageProvider(url) : null,
+              child: url == null
+                  ? const Icon(Icons.person_rounded, size: 32)
+                  : null,
+            ),
+            const SizedBox(height: 6),
             Text(
-              member.character,
-              maxLines: 1,
+              member.name,
+              maxLines: 2,
               textAlign: TextAlign.center,
               overflow: TextOverflow.ellipsis,
-              style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodySmall
+                  ?.copyWith(fontWeight: FontWeight.w600),
             ),
-        ],
+            if (member.character.isNotEmpty)
+              Text(
+                member.character,
+                maxLines: 1,
+                textAlign: TextAlign.center,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+              ),
+          ],
+        ),
       ),
     );
   }

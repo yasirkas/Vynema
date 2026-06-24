@@ -2,6 +2,7 @@ import '../datasources/tmdb_remote_datasource.dart';
 import '../models/genre.dart';
 import '../models/media_detail.dart';
 import '../models/media_item.dart';
+import '../models/person.dart';
 
 /// Coordinates media data access for the presentation layer.
 ///
@@ -26,6 +27,8 @@ class MediaRepository {
       _remote.getDetail(type, id);
 
   Future<List<Genre>> getGenres(MediaType type) => _remote.getGenres(type);
+
+  Future<Person> getPerson(int id) => _remote.getPerson(id);
 
   Future<({List<MediaItem> items, bool hasMore})> discoverByGenre(
     MediaType type,
