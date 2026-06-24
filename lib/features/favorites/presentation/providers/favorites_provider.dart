@@ -26,12 +26,16 @@ class FavoritesNotifier extends Notifier<List<MediaItem>> {
   bool isFavorite(MediaItem item) => state.contains(item);
 
   Future<void> toggle(MediaItem item) async {
-    if (isFavorite(item)) {
-      await _repository.remove(item);
-    } else {
-      await _repository.add(item);
+    try {
+      if (isFavorite(item)) {
+        await _repository.remove(item);
+      } else {
+        await _repository.add(item);
+      }
+      state = _repository.getAll();
+    } on HiveError {
+      // Hive write failed — persisted state unchanged, UI stays consistent
     }
-    state = _repository.getAll();
   }
 }
 

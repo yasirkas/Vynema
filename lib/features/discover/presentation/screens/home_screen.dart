@@ -155,7 +155,7 @@ class _BrandTitle extends StatelessWidget {
       shaderCallback: (bounds) =>
           AppColors.brandGradient.createShader(bounds),
       child: Text(
-        'Vynema',
+        context.l10n.appTitle,
         style: Theme.of(context).textTheme.headlineSmall?.copyWith(
               fontWeight: FontWeight.w800,
               color: Colors.white,

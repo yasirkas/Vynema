@@ -55,7 +55,11 @@ class ThemeModeNotifier extends Notifier<ThemeMode> {
 
   void setMode(ThemeMode mode) {
     state = mode;
-    _box.put(_key, mode == ThemeMode.light ? 'light' : 'dark');
+    try {
+      _box.put(_key, mode == ThemeMode.light ? 'light' : 'dark');
+    } on HiveError {
+      // persist failure — in-memory state still updated
+    }
   }
 }
 
@@ -78,7 +82,11 @@ class LocaleNotifier extends Notifier<Locale> {
 
   void setLocale(Locale locale) {
     state = locale;
-    _box.put(_key, locale.languageCode);
+    try {
+      _box.put(_key, locale.languageCode);
+    } on HiveError {
+      // persist failure — in-memory state still updated
+    }
   }
 }
 

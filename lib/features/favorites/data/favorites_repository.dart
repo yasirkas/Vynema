@@ -24,10 +24,14 @@ class FavoritesRepository {
 
   /// Returns all favorites, most recently added first.
   List<MediaItem> getAll() {
-    return _box.values
-        .map((e) => MediaItem.fromJson(Map<String, dynamic>.from(e as Map)))
-        .toList()
-        .reversed
-        .toList();
+    try {
+      return _box.values
+          .map((e) => MediaItem.fromJson(Map<String, dynamic>.from(e as Map)))
+          .toList()
+          .reversed
+          .toList();
+    } catch (_) {
+      return [];
+    }
   }
 }

@@ -269,15 +269,10 @@ class _CastSection extends StatelessWidget {
                 ?.copyWith(fontWeight: FontWeight.w700),
           ),
         ),
-        SizedBox(
+        _HorizontalCarousel(
           height: 150,
-          child: ListView.separated(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            scrollDirection: Axis.horizontal,
-            itemCount: cast.length,
-            separatorBuilder: (_, _) => const SizedBox(width: 12),
-            itemBuilder: (context, index) => _CastCard(member: cast[index]),
-          ),
+          itemCount: cast.length,
+          itemBuilder: (context, i) => _CastCard(member: cast[i]),
         ),
       ],
     );
@@ -406,6 +401,32 @@ class _LogoFallback extends StatelessWidget {
   }
 }
 
+class _HorizontalCarousel extends StatelessWidget {
+  const _HorizontalCarousel({
+    required this.height,
+    required this.itemCount,
+    required this.itemBuilder,
+  });
+
+  final double height;
+  final int itemCount;
+  final IndexedWidgetBuilder itemBuilder;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: height,
+      child: ListView.separated(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        scrollDirection: Axis.horizontal,
+        itemCount: itemCount,
+        separatorBuilder: (_, _) => const SizedBox(width: 12),
+        itemBuilder: itemBuilder,
+      ),
+    );
+  }
+}
+
 class _SimilarSection extends StatelessWidget {
   const _SimilarSection({required this.items, required this.mediaType});
 
@@ -429,17 +450,12 @@ class _SimilarSection extends StatelessWidget {
                 ?.copyWith(fontWeight: FontWeight.w700),
           ),
         ),
-        SizedBox(
+        _HorizontalCarousel(
           height: 200,
-          child: ListView.separated(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            scrollDirection: Axis.horizontal,
-            itemCount: items.length,
-            separatorBuilder: (_, _) => const SizedBox(width: 12),
-            itemBuilder: (context, index) => SizedBox(
-              width: 110,
-              child: MediaCard(item: items[index]),
-            ),
+          itemCount: items.length,
+          itemBuilder: (_, i) => SizedBox(
+            width: 110,
+            child: MediaCard(item: items[i]),
           ),
         ),
       ],
