@@ -27,6 +27,10 @@ class MediaRepository {
 
   Future<List<Genre>> getGenres(MediaType type) => _remote.getGenres(type);
 
-  Future<List<MediaItem>> discoverByGenre(MediaType type, int genreId) =>
-      _remote.discoverByGenre(type, genreId);
+  Future<({List<MediaItem> items, bool hasMore})> discoverByGenre(
+    MediaType type,
+    int genreId, {
+    int page = 1,
+  }) =>
+      _remote.discoverByGenre(type, genreId, page: page);
 }

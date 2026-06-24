@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/providers.dart';
 import '../../../../shared/widgets/error_view.dart';
 import '../../../../shared/widgets/loading_grid.dart';
 import '../../data/models/media_item.dart';
-import '../providers/discover_providers.dart';
-import '../widgets/media_grid.dart';
+import '../widgets/media_card.dart';
 
-class GenreScreen extends ConsumerWidget {
+class GenreScreen extends ConsumerStatefulWidget {
   const GenreScreen({
     super.key,
     required this.mediaType,
@@ -20,39 +20,115 @@ class GenreScreen extends ConsumerWidget {
   final String genreName;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final params = (type: mediaType, genreId: genreId);
-    final results = ref.watch(discoverByGenreProvider(params));
+  ConsumerState<GenreScreen> createState() => _GenreScreenState();
+}
 
+class _GenreScreenState extends ConsumerState<GenreScreen> {
+  final List<MediaItem> _items = [];
+  final ScrollController _scroll = ScrollController();
+  int _page = 0;
+  bool _hasMore = true;
+  bool _isLoading = false;
+  String? _error;
+
+  @override
+  void initState() {
+    super.initState();
+    _scroll.addListener(_onScroll);
+    _loadMore();
+  }
+
+  @override
+  void dispose() {
+    _scroll.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (_scroll.position.pixels >= _scroll.position.maxScrollExtent - 400) {
+      _loadMore();
+    }
+  }
+
+  Future<void> _loadMore() async {
+    if (_isLoading || !_hasMore) return;
+    setState(() {
+      _isLoading = true;
+      _error = null;
+    });
+    try {
+      final result = await ref
+          .read(mediaRepositoryProvider)
+          .discoverByGenre(widget.mediaType, widget.genreId, page: _page + 1);
+      if (!mounted) return;
+      setState(() {
+        _items.addAll(result.items);
+        _page++;
+        _hasMore = result.hasMore;
+        _isLoading = false;
+      });
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _isLoading = false;
+        _error = e.toString();
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(genreName),
+        title: Text(widget.genreName),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 16),
             child: Chip(
               label: Text(
-                mediaType == MediaType.movie ? 'Film' : 'Dizi',
+                widget.mediaType == MediaType.movie ? 'Film' : 'Dizi',
                 style: const TextStyle(fontSize: 12),
               ),
             ),
           ),
         ],
       ),
-      body: results.when(
-        loading: () => const LoadingGrid(),
-        error: (error, _) => ErrorView(
-          message: error.toString(),
-          onRetry: () =>
-              ref.invalidate(discoverByGenreProvider(params)),
+      body: _buildBody(),
+    );
+  }
+
+  Widget _buildBody() {
+    if (_items.isEmpty && _isLoading) return const LoadingGrid();
+    if (_items.isEmpty && _error != null) {
+      return ErrorView(message: _error!, onRetry: _loadMore);
+    }
+    return CustomScrollView(
+      controller: _scroll,
+      slivers: [
+        SliverPadding(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+          sliver: SliverGrid(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) => MediaCard(item: _items[index]),
+              childCount: _items.length,
+            ),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3,
+              childAspectRatio: 0.52,
+              crossAxisSpacing: 12,
+              mainAxisSpacing: 16,
+            ),
+          ),
         ),
-        data: (items) {
-          if (items.isEmpty) {
-            return const Center(child: Text('İçerik bulunamadı.'));
-          }
-          return MediaGrid(items: items);
-        },
-      ),
+        SliverToBoxAdapter(
+          child: _isLoading
+              ? const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 24),
+                  child: Center(child: CircularProgressIndicator()),
+                )
+              : const SizedBox(height: 24),
+        ),
+      ],
     );
   }
 }

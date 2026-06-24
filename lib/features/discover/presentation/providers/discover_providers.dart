@@ -22,9 +22,3 @@ final genresProvider =
 );
 
 typedef GenreParams = ({MediaType type, int genreId});
-
-final discoverByGenreProvider =
-    FutureProvider.autoDispose.family<List<MediaItem>, GenreParams>(
-  (ref, p) =>
-      ref.watch(mediaRepositoryProvider).discoverByGenre(p.type, p.genreId),
-);
