@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../features/discover/data/models/media_item.dart';
 import '../../features/discover/presentation/screens/detail_screen.dart';
+import '../../features/discover/presentation/screens/genre_screen.dart';
 import '../../features/discover/presentation/screens/home_screen.dart';
 import '../../features/discover/presentation/screens/search_screen.dart';
 import '../../features/favorites/presentation/screens/favorites_screen.dart';
@@ -57,6 +58,18 @@ class AppRouter {
           return DetailScreen(mediaType: type, id: id);
         },
       ),
+      GoRoute(
+        path: '/genre',
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) {
+          final extra = state.extra! as Map<String, dynamic>;
+          return GenreScreen(
+            mediaType: extra['type'] as MediaType,
+            genreId: extra['genreId'] as int,
+            genreName: extra['genreName'] as String,
+          );
+        },
+      ),
     ],
     navigatorKey: _rootNavigatorKey,
   );
@@ -65,8 +78,12 @@ class AppRouter {
 final GlobalKey<NavigatorState> _rootNavigatorKey =
     GlobalKey<NavigatorState>();
 
-/// Helper to navigate to a media item's detail page from anywhere.
 extension MediaNavigation on BuildContext {
   void goToDetail(MediaItem item) =>
       push('/detail/${item.mediaType.asPath}/${item.id}');
+
+  void goToGenre(MediaType type, int genreId, String genreName) => push(
+        '/genre',
+        extra: {'type': type, 'genreId': genreId, 'genreName': genreName},
+      );
 }

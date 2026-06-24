@@ -1,4 +1,5 @@
 import '../datasources/tmdb_remote_datasource.dart';
+import '../models/genre.dart';
 import '../models/media_detail.dart';
 import '../models/media_item.dart';
 
@@ -23,4 +24,9 @@ class MediaRepository {
 
   Future<MediaDetail> getDetail(MediaType type, int id) =>
       _remote.getDetail(type, id);
+
+  Future<List<Genre>> getGenres(MediaType type) => _remote.getGenres(type);
+
+  Future<List<MediaItem>> discoverByGenre(MediaType type, int genreId) =>
+      _remote.discoverByGenre(type, genreId);
 }

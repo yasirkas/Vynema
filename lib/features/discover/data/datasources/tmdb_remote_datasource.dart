@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 
 import '../../../../core/constants/api_constants.dart';
 import '../../../../core/network/dio_client.dart';
+import '../models/genre.dart';
 import '../models/media_detail.dart';
 import '../models/media_item.dart';
 
@@ -27,6 +28,32 @@ class TmdbRemoteDataSource {
       queryParameters: {'query': query, 'include_adult': false},
     );
   }
+
+  Future<List<Genre>> getGenres(MediaType type) async {
+    final path = type == MediaType.movie
+        ? ApiConstants.genreMovieList
+        : ApiConstants.genreTvList;
+    try {
+      final response = await _dio.get(path);
+      final list = (response.data['genres'] as List<dynamic>? ?? [])
+          .cast<Map<String, dynamic>>();
+      return list.map(Genre.fromJson).toList();
+    } on DioException catch (e) {
+      throw ApiException(e.message ?? 'Türler yüklenemedi.');
+    }
+  }
+
+  Future<List<MediaItem>> discoverByGenre(MediaType type, int genreId) =>
+      _fetchList(
+        type == MediaType.movie
+            ? ApiConstants.discoverMovie
+            : ApiConstants.discoverTv,
+        fallbackType: type,
+        queryParameters: {
+          'with_genres': genreId,
+          'sort_by': 'popularity.desc',
+        },
+      );
 
   Future<MediaDetail> getDetail(MediaType type, int id) async {
     final path = type == MediaType.movie

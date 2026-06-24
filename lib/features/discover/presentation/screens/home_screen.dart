@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/providers.dart';
+import '../../../../core/router/app_router.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../data/models/media_item.dart';
 import '../providers/discover_providers.dart';
 import '../widgets/media_carousel.dart';
 
@@ -46,6 +48,7 @@ class HomeScreen extends ConsumerWidget {
                   ),
                 ],
               ),
+              const SliverToBoxAdapter(child: _GenreRow()),
               SliverToBoxAdapter(
                 child: MediaCarousel(
                   title: 'Bu Hafta Trend',
@@ -67,6 +70,39 @@ class HomeScreen extends ConsumerWidget {
               const SliverToBoxAdapter(child: SizedBox(height: 24)),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class _GenreRow extends ConsumerWidget {
+  const _GenreRow();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final genres = ref.watch(genresProvider(MediaType.movie));
+    return genres.when(
+      loading: () => const SizedBox(height: 48),
+      error: (_, _) => const SizedBox.shrink(),
+      data: (list) => SizedBox(
+        height: 48,
+        child: ListView.separated(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          scrollDirection: Axis.horizontal,
+          itemCount: list.length,
+          separatorBuilder: (_, _) => const SizedBox(width: 8),
+          itemBuilder: (context, index) {
+            final genre = list[index];
+            return ActionChip(
+              label: Text(genre.name),
+              onPressed: () => context.goToGenre(
+                MediaType.movie,
+                genre.id,
+                genre.name,
+              ),
+            );
+          },
         ),
       ),
     );
