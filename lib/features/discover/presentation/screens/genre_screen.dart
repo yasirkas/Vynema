@@ -26,9 +26,14 @@ class GenreScreen extends ConsumerStatefulWidget {
 class _GenreScreenState extends ConsumerState<GenreScreen> {
   final List<MediaItem> _items = [];
   final ScrollController _scroll = ScrollController();
+
+  // ValueNotifier so only the spinner rebuilds on load state changes,
+  // not the entire grid.
+  final ValueNotifier<bool> _loadingNotifier = ValueNotifier(false);
+
   int _page = 0;
   bool _hasMore = true;
-  bool _isLoading = false;
+  bool _inFlight = false;
   String? _error;
 
   @override
@@ -41,6 +46,7 @@ class _GenreScreenState extends ConsumerState<GenreScreen> {
   @override
   void dispose() {
     _scroll.dispose();
+    _loadingNotifier.dispose();
     super.dispose();
   }
 
@@ -51,11 +57,9 @@ class _GenreScreenState extends ConsumerState<GenreScreen> {
   }
 
   Future<void> _loadMore() async {
-    if (_isLoading || !_hasMore) return;
-    setState(() {
-      _isLoading = true;
-      _error = null;
-    });
+    if (_inFlight || !_hasMore) return;
+    _inFlight = true;
+    _loadingNotifier.value = true;
     try {
       final result = await ref
           .read(mediaRepositoryProvider)
@@ -65,14 +69,14 @@ class _GenreScreenState extends ConsumerState<GenreScreen> {
         _items.addAll(result.items);
         _page++;
         _hasMore = result.hasMore;
-        _isLoading = false;
+        _error = null;
       });
     } catch (e) {
       if (!mounted) return;
-      setState(() {
-        _isLoading = false;
-        _error = e.toString();
-      });
+      setState(() => _error = e.toString());
+    } finally {
+      _inFlight = false;
+      if (mounted) _loadingNotifier.value = false;
     }
   }
 
@@ -98,10 +102,20 @@ class _GenreScreenState extends ConsumerState<GenreScreen> {
   }
 
   Widget _buildBody() {
-    if (_items.isEmpty && _isLoading) return const LoadingGrid();
-    if (_items.isEmpty && _error != null) {
-      return ErrorView(message: _error!, onRetry: _loadMore);
+    // Empty + loading → full-screen shimmer
+    if (_items.isEmpty) {
+      return ValueListenableBuilder(
+        valueListenable: _loadingNotifier,
+        builder: (context, loading, _) {
+          if (loading) return const LoadingGrid();
+          if (_error != null) {
+            return ErrorView(message: _error!, onRetry: _loadMore);
+          }
+          return const SizedBox.shrink();
+        },
+      );
     }
+
     return CustomScrollView(
       controller: _scroll,
       slivers: [
@@ -109,8 +123,12 @@ class _GenreScreenState extends ConsumerState<GenreScreen> {
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
           sliver: SliverGrid(
             delegate: SliverChildBuilderDelegate(
-              (context, index) => MediaCard(item: _items[index]),
+              (context, index) => RepaintBoundary(
+                child: MediaCard(item: _items[index]),
+              ),
               childCount: _items.length,
+              // Manual RepaintBoundary above; auto ones would double-wrap.
+              addRepaintBoundaries: false,
             ),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 3,
@@ -120,13 +138,17 @@ class _GenreScreenState extends ConsumerState<GenreScreen> {
             ),
           ),
         ),
+        // Only the spinner rebuilds on load state changes — grid stays intact.
         SliverToBoxAdapter(
-          child: _isLoading
-              ? const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 24),
-                  child: Center(child: CircularProgressIndicator()),
-                )
-              : const SizedBox(height: 24),
+          child: ValueListenableBuilder(
+            valueListenable: _loadingNotifier,
+            builder: (context, loading, _) => loading
+                ? const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 24),
+                    child: Center(child: CircularProgressIndicator()),
+                  )
+                : const SizedBox(height: 24),
+          ),
         ),
       ],
     );

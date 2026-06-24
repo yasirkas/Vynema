@@ -60,6 +60,7 @@ class TmdbRemoteDataSource {
       final totalPages = (response.data['total_pages'] as int?) ?? 1;
       final results = (response.data['results'] as List<dynamic>? ?? [])
           .cast<Map<String, dynamic>>()
+          .take(18)
           .map((json) => MediaItem.fromJson(json, fallbackType: type))
           .toList();
       return (items: results, hasMore: page < totalPages);

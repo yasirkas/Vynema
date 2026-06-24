@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/constants/api_constants.dart';
 import '../../../../core/router/app_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../favorites/presentation/providers/favorites_provider.dart';
@@ -19,7 +20,7 @@ class MediaCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isFavorite = ref.watch(isFavoriteProvider(item));
-    final posterUrl = item.posterUrl();
+    final posterUrl = item.posterUrl(size: ApiConstants.posterSizeSmall);
 
     return GestureDetector(
       onTap: () => context.goToDetail(item),
@@ -36,6 +37,8 @@ class MediaCard extends ConsumerWidget {
                     CachedNetworkImage(
                       imageUrl: posterUrl,
                       fit: BoxFit.cover,
+                      memCacheWidth: 350,
+                      filterQuality: FilterQuality.medium,
                       placeholder: (_, _) =>
                           Container(color: AppColors.darkSurfaceVariant),
                       errorWidget: (_, _, _) => const _PosterFallback(),
