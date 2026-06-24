@@ -421,14 +421,23 @@ class _HorizontalCarousel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: height,
-      child: ListView.separated(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        scrollDirection: Axis.horizontal,
-        itemCount: itemCount,
-        separatorBuilder: (_, _) => const SizedBox(width: 12),
-        itemBuilder: itemBuilder,
+    return ShaderMask(
+      shaderCallback: (bounds) => const LinearGradient(
+        begin: Alignment.centerLeft,
+        end: Alignment.centerRight,
+        colors: [Colors.white, Colors.white, Colors.transparent],
+        stops: [0.0, 0.82, 1.0],
+      ).createShader(bounds),
+      blendMode: BlendMode.dstIn,
+      child: SizedBox(
+        height: height,
+        child: ListView.separated(
+          padding: const EdgeInsets.only(left: 16),
+          scrollDirection: Axis.horizontal,
+          itemCount: itemCount,
+          separatorBuilder: (_, _) => const SizedBox(width: 12),
+          itemBuilder: itemBuilder,
+        ),
       ),
     );
   }

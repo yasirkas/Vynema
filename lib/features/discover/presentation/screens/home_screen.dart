@@ -47,16 +47,6 @@ class HomeScreen extends ConsumerWidget {
                     onPressed: () => _openFilter(context),
                   ),
                   IconButton(
-                    tooltip: l10n.themeToggleTooltip,
-                    onPressed: () =>
-                        ref.read(themeModeProvider.notifier).toggle(),
-                    icon: Icon(
-                      isDark
-                          ? Icons.light_mode_outlined
-                          : Icons.dark_mode_outlined,
-                    ),
-                  ),
-                  IconButton(
                     tooltip: l10n.settingsTooltip,
                     icon: const Icon(Icons.settings_outlined),
                     onPressed: () => context.goToSettings(),
