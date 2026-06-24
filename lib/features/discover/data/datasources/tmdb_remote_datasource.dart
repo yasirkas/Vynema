@@ -13,6 +13,9 @@ class TmdbRemoteDataSource {
 
   final Dio _dio;
 
+  Never _throw(DioException e) =>
+      throw ApiException(apiErrorKindFor(e), statusCode: e.response?.statusCode);
+
   Future<List<MediaItem>> getTrending() =>
       _fetchList(ApiConstants.trendingAll);
 
@@ -69,7 +72,7 @@ class TmdbRemoteDataSource {
           .toList();
       return (items: results, hasMore: page < totalPages);
     } on DioException catch (e) {
-      throw ApiException(apiErrorKindFor(e), statusCode: e.response?.statusCode);
+      _throw(e);
     }
   }
 
@@ -83,7 +86,7 @@ class TmdbRemoteDataSource {
           .cast<Map<String, dynamic>>();
       return list.map(Genre.fromJson).toList();
     } on DioException catch (e) {
-      throw ApiException(apiErrorKindFor(e), statusCode: e.response?.statusCode);
+      _throw(e);
     }
   }
 
@@ -109,7 +112,7 @@ class TmdbRemoteDataSource {
           .toList();
       return (items: results, hasMore: page < totalPages);
     } on DioException catch (e) {
-      throw ApiException(apiErrorKindFor(e), statusCode: e.response?.statusCode);
+      _throw(e);
     }
   }
 
@@ -121,7 +124,7 @@ class TmdbRemoteDataSource {
       );
       return Person.fromJson(response.data as Map<String, dynamic>);
     } on DioException catch (e) {
-      throw ApiException(apiErrorKindFor(e), statusCode: e.response?.statusCode);
+      _throw(e);
     }
   }
 
@@ -141,7 +144,7 @@ class TmdbRemoteDataSource {
         mediaType: type,
       );
     } on DioException catch (e) {
-      throw ApiException(apiErrorKindFor(e), statusCode: e.response?.statusCode);
+      _throw(e);
     }
   }
 
@@ -162,7 +165,7 @@ class TmdbRemoteDataSource {
               MediaItem.fromJson(json, fallbackType: fallbackType))
           .toList();
     } on DioException catch (e) {
-      throw ApiException(apiErrorKindFor(e), statusCode: e.response?.statusCode);
+      _throw(e);
     }
   }
 }

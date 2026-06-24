@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/theme/app_colors.dart';
+
 /// A titled section heading used above home-screen carousels.
 class SectionHeader extends StatelessWidget {
   const SectionHeader({super.key, required this.title});
@@ -16,10 +18,10 @@ class SectionHeader extends StatelessWidget {
             width: 4,
             height: 22,
             decoration: BoxDecoration(
-              gradient: const LinearGradient(
+              gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [Color(0xFF7C4DFF), Color(0xFFFF4D8D)],
+                colors: AppColors.brandGradient.colors,
               ),
               borderRadius: BorderRadius.circular(4),
             ),

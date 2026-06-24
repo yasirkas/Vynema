@@ -16,6 +16,13 @@ import '../providers/detail_provider.dart';
 import '../widgets/media_card.dart';
 import '../widgets/rating_badge.dart';
 
+const double _kPosterHeight = 280;
+const double _kCastCarouselHeight = 150;
+const double _kSimilarCarouselHeight = 200;
+const double _kCastCardWidth = 84;
+const double _kCastAvatarRadius = 38;
+const double _kSimilarCardWidth = 110;
+
 class DetailScreen extends ConsumerWidget {
   const DetailScreen({super.key, required this.mediaType, required this.id});
 
@@ -56,7 +63,7 @@ class _DetailContent extends ConsumerWidget {
     return CustomScrollView(
       slivers: [
         SliverAppBar(
-          expandedHeight: 280,
+          expandedHeight: _kPosterHeight,
           pinned: true,
           flexibleSpace: FlexibleSpaceBar(
             background: Stack(
@@ -270,7 +277,7 @@ class _CastSection extends StatelessWidget {
           ),
         ),
         _HorizontalCarousel(
-          height: 150,
+          height: _kCastCarouselHeight,
           itemCount: cast.length,
           itemBuilder: (context, i) => _CastCard(member: cast[i]),
         ),
@@ -290,11 +297,11 @@ class _CastCard extends StatelessWidget {
     return GestureDetector(
       onTap: () => context.goToPerson(member.id),
       child: SizedBox(
-        width: 84,
+        width: _kCastCardWidth,
         child: Column(
           children: [
             CircleAvatar(
-              radius: 38,
+              radius: _kCastAvatarRadius,
               backgroundColor: AppColors.darkSurfaceVariant,
               backgroundImage:
                   url != null ? CachedNetworkImageProvider(url) : null,
@@ -451,10 +458,10 @@ class _SimilarSection extends StatelessWidget {
           ),
         ),
         _HorizontalCarousel(
-          height: 200,
+          height: _kSimilarCarouselHeight,
           itemCount: items.length,
           itemBuilder: (_, i) => SizedBox(
-            width: 110,
+            width: _kSimilarCardWidth,
             child: MediaCard(item: items[i]),
           ),
         ),
