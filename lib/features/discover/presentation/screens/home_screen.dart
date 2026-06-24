@@ -68,14 +68,14 @@ class HomeScreen extends ConsumerWidget {
               ),
               SliverToBoxAdapter(
                 child: MediaCarousel(
-                  title: l10n.titlePopularMovies,
-                  provider: popularMoviesProvider,
+                  title: l10n.carouselTopRated,
+                  provider: topRatedMoviesProvider,
                 ),
               ),
               SliverToBoxAdapter(
                 child: MediaCarousel(
-                  title: l10n.carouselTopRated,
-                  provider: topRatedMoviesProvider,
+                  title: l10n.titlePopularMovies,
+                  provider: popularMoviesProvider,
                 ),
               ),
               SliverToBoxAdapter(
