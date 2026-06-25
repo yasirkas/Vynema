@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -15,27 +17,31 @@ class _SplashScreenState extends State<SplashScreen>
   late final AnimationController _ctrl;
   late final Animation<double> _opacity;
   late final Animation<double> _scale;
+  Timer? _navTimer;
 
   @override
   void initState() {
     super.initState();
     _ctrl = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 900),
+      duration: const Duration(milliseconds: 600),
     );
     _opacity = CurvedAnimation(parent: _ctrl, curve: Curves.easeIn);
-    _scale = Tween<double>(begin: 0.85, end: 1.0)
-        .animate(CurvedAnimation(parent: _ctrl, curve: Curves.easeOutCubic));
-    _ctrl.addStatusListener((status) {
-      if (status == AnimationStatus.completed && mounted) {
-        context.go('/home');
-      }
-    });
+    _scale = Tween<double>(
+      begin: 0.85,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _ctrl, curve: Curves.easeOutCubic));
+
     _ctrl.forward();
+
+    _navTimer = Timer(const Duration(milliseconds: 1500), () {
+      if (mounted) context.go('/home');
+    });
   }
 
   @override
   void dispose() {
+    _navTimer?.cancel();
     _ctrl.dispose();
     super.dispose();
   }
