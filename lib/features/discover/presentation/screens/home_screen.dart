@@ -106,23 +106,40 @@ class _GenreRow extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final genres = ref.watch(genresProvider(MediaType.movie));
     return genres.when(
-      loading: () => const SizedBox(height: 48),
+      loading: () => const SizedBox(height: 64),
       error: (_, _) => const SizedBox.shrink(),
-      data: (list) => SizedBox(
-        height: 48,
-        child: ListView.separated(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          scrollDirection: Axis.horizontal,
-          itemCount: list.length,
-          separatorBuilder: (_, _) => const SizedBox(width: 8),
-          itemBuilder: (context, index) {
-            final genre = list[index];
-            return ActionChip(
-              label: Text(genre.name),
-              onPressed: () =>
-                  context.goToGenre(MediaType.movie, genre.id, genre.name),
-            );
-          },
+      data: (list) => Padding(
+        padding: const EdgeInsets.only(top: 4, bottom: 10),
+        child: SizedBox(
+          height: 40,
+          child: ShaderMask(
+            shaderCallback: (bounds) => const LinearGradient(
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+              colors: [Colors.white, Colors.white, Colors.transparent],
+              stops: [0.0, 0.93, 1.0],
+            ).createShader(bounds),
+            blendMode: BlendMode.dstIn,
+            child: ListView.separated(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              scrollDirection: Axis.horizontal,
+              itemCount: list.length,
+              separatorBuilder: (_, _) => const SizedBox(width: 8),
+              itemBuilder: (context, index) {
+                final genre = list[index];
+                return Center(
+                  child: ActionChip(
+                    label: Text(genre.name),
+                    onPressed: () => context.goToGenre(
+                      MediaType.movie,
+                      genre.id,
+                      genre.name,
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
         ),
       ),
     );
