@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../shared/widgets/fade_slide_in.dart';
 import '../../data/models/media_item.dart';
 import 'media_card.dart';
 
@@ -25,7 +26,10 @@ class MediaGrid extends StatelessWidget {
         mainAxisSpacing: 16,
       ),
       itemCount: items.length,
-      itemBuilder: (context, index) => MediaCard(item: items[index]),
+      itemBuilder: (context, index) => FadeSlideIn(
+        delay: staggerDelay(index),
+        child: MediaCard(item: items[index]),
+      ),
     );
   }
 }

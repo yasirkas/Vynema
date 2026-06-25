@@ -11,79 +11,112 @@ import 'rating_badge.dart';
 
 /// A poster card for a movie/TV item: image, rating, favorite toggle, title.
 ///
-/// Tapping the card opens the detail screen.
-class MediaCard extends ConsumerWidget {
+/// Tapping the card opens the detail screen; pressing scales it down slightly
+/// for tactile feedback.
+class MediaCard extends ConsumerStatefulWidget {
   const MediaCard({super.key, required this.item});
 
   final MediaItem item;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<MediaCard> createState() => _MediaCardState();
+}
+
+class _MediaCardState extends ConsumerState<MediaCard> {
+  bool _pressed = false;
+
+  void _setPressed(bool value) {
+    if (_pressed != value) setState(() => _pressed = value);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final item = widget.item;
     final isFavorite = ref.watch(isFavoriteProvider(item));
     final posterUrl = item.posterUrl(size: ApiConstants.posterSizeSmall);
 
     return GestureDetector(
       onTap: () => context.goToDetail(item),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(16),
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  if (posterUrl != null)
-                    CachedNetworkImage(
-                      imageUrl: posterUrl,
-                      fit: BoxFit.cover,
-                      memCacheWidth: 350,
-                      filterQuality: FilterQuality.medium,
-                      placeholder: (_, _) =>
-                          Container(color: AppColors.darkSurfaceVariant),
-                      errorWidget: (_, _, _) => const _PosterFallback(),
-                    )
-                  else
-                    const _PosterFallback(),
-                  Positioned(
-                    top: 6,
-                    left: 6,
-                    child: RatingBadge(
-                      voteAverage: item.voteAverage,
-                      compact: true,
+      onTapDown: (_) => _setPressed(true),
+      onTapUp: (_) => _setPressed(false),
+      onTapCancel: () => _setPressed(false),
+      child: AnimatedScale(
+        scale: _pressed ? 0.96 : 1,
+        duration: const Duration(milliseconds: 120),
+        curve: Curves.easeOut,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.35),
+                      blurRadius: 12,
+                      offset: const Offset(0, 6),
                     ),
+                  ],
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(16),
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      if (posterUrl != null)
+                        CachedNetworkImage(
+                          imageUrl: posterUrl,
+                          fit: BoxFit.cover,
+                          memCacheWidth: 350,
+                          filterQuality: FilterQuality.medium,
+                          placeholder: (_, _) =>
+                              Container(color: AppColors.darkSurfaceVariant),
+                          errorWidget: (_, _, _) => const _PosterFallback(),
+                        )
+                      else
+                        const _PosterFallback(),
+                      Positioned(
+                        top: 6,
+                        left: 6,
+                        child: RatingBadge(
+                          voteAverage: item.voteAverage,
+                          compact: true,
+                        ),
+                      ),
+                      Positioned(
+                        top: 2,
+                        right: 2,
+                        child: _FavoriteButton(
+                          isFavorite: isFavorite,
+                          onPressed: () =>
+                              ref.read(favoritesProvider.notifier).toggle(item),
+                        ),
+                      ),
+                    ],
                   ),
-                  Positioned(
-                    top: 2,
-                    right: 2,
-                    child: _FavoriteButton(
-                      isFavorite: isFavorite,
-                      onPressed: () =>
-                          ref.read(favoritesProvider.notifier).toggle(item),
-                    ),
-                  ),
-                ],
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            item.title,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: Theme.of(context)
-                .textTheme
-                .bodyMedium
-                ?.copyWith(fontWeight: FontWeight.w600),
-          ),
-          if (item.year != null)
+            const SizedBox(height: 6),
             Text(
-              item.year!,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
+              item.title,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(fontWeight: FontWeight.w600),
             ),
-        ],
+            if (item.year != null)
+              Text(
+                item.year!,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+              ),
+          ],
+        ),
       ),
     );
   }

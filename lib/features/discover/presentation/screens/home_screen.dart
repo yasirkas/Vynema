@@ -8,6 +8,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../data/models/discover_filter.dart';
 import '../../data/models/media_item.dart';
 import '../providers/discover_providers.dart';
+import '../widgets/featured_hero.dart';
 import '../widgets/filter_bottom_sheet.dart';
 import '../widgets/media_carousel.dart';
 
@@ -54,12 +55,7 @@ class HomeScreen extends ConsumerWidget {
                 ],
               ),
               const SliverToBoxAdapter(child: _GenreRow()),
-              SliverToBoxAdapter(
-                child: MediaCarousel(
-                  title: l10n.carouselTrending,
-                  provider: trendingProvider,
-                ),
-              ),
+              const SliverToBoxAdapter(child: FeaturedHero()),
               SliverToBoxAdapter(
                 child: MediaCarousel(
                   title: l10n.carouselNowPlaying,
@@ -123,11 +119,8 @@ class _GenreRow extends ConsumerWidget {
             final genre = list[index];
             return ActionChip(
               label: Text(genre.name),
-              onPressed: () => context.goToGenre(
-                MediaType.movie,
-                genre.id,
-                genre.name,
-              ),
+              onPressed: () =>
+                  context.goToGenre(MediaType.movie, genre.id, genre.name),
             );
           },
         ),
@@ -142,15 +135,14 @@ class _BrandTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ShaderMask(
-      shaderCallback: (bounds) =>
-          AppColors.brandGradient.createShader(bounds),
+      shaderCallback: (bounds) => AppColors.brandGradient.createShader(bounds),
       child: Text(
         context.l10n.appTitle,
         style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.w800,
-              color: Colors.white,
-              letterSpacing: 0.5,
-            ),
+          fontWeight: FontWeight.w800,
+          color: Colors.white,
+          letterSpacing: 0.5,
+        ),
       ),
     );
   }
