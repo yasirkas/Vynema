@@ -13,6 +13,23 @@ Flutter ile geliştirilmiş, [TMDB](https://www.themoviedb.org/) API ile çalı�
 - **Ayarlar** — tema (koyu/açık) ve dil (Türkçe/İngilizce) çalışma anında değiştirilebilir, ikisi de kalıcı
 - **İncelikli arayüz** — açılış ekranı, glassmorphism, gradient'ler, shimmer yükleme durumları ve akıcı geçişler
 
+## Ekran Görüntüleri
+
+<table>
+  <tr>
+    <td align="center"><img src="docs/screenshots/home.png" width="200"><br>Ana Sayfa</td>
+    <td align="center"><img src="docs/screenshots/home-2.png" width="200"><br>Ana Sayfa Devamı</td>
+    <td align="center"><img src="docs/screenshots/detail.png" width="200"><br>Film/Dizi Detay</td>
+    <td align="center"><img src="docs/screenshots/search.png" width="200"><br>Arama</td>
+  </tr>
+  <tr>
+    <td align="center"><img src="docs/screenshots/filter.png" width="200"><br>Filtreleme</td>
+    <td align="center"><img src="docs/screenshots/favorites.png" width="200"><br>Favoriler</td>
+    <td align="center"><img src="docs/screenshots/settings.png" width="200"><br>Ayarlar</td>
+    <td align="center"><img src="docs/screenshots/not-found.png" width="200"><br>404</td>
+  </tr>
+</table>
+
 ## Teknoloji Yığını
 
 | Katman | Seçim |
