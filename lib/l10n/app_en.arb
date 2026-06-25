@@ -88,6 +88,7 @@
 
   "emptyContent": "No content found.",
   "retry": "Retry",
+  "goHome": "Go to home",
 
   "errorNoApiKey": "TMDB API key not found. Please add your key to the .env file.",
   "errorTimeout": "The connection timed out. Please try again.",

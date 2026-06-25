@@ -13,6 +13,8 @@ import '../../features/favorites/presentation/screens/favorites_screen.dart';
 import '../../features/settings/presentation/screens/settings_screen.dart';
 import '../../features/splash/presentation/screens/splash_screen.dart';
 import '../../shared/widgets/app_shell.dart';
+import '../l10n.dart';
+import '../theme/app_colors.dart';
 
 /// Application route configuration.
 ///
@@ -64,7 +66,8 @@ class AppRouter {
         parentNavigatorKey: _rootNavigatorKey,
         builder: (context, state) {
           final type = MediaType.fromString(state.pathParameters['type']);
-          final id = int.parse(state.pathParameters['id']!);
+          final id = int.tryParse(state.pathParameters['id'] ?? '');
+          if (id == null) return const _NotFoundScreen();
           return DetailScreen(mediaType: type, id: id);
         },
       ),
@@ -84,7 +87,8 @@ class AppRouter {
         path: '/person/:id',
         parentNavigatorKey: _rootNavigatorKey,
         builder: (context, state) {
-          final id = int.parse(state.pathParameters['id']!);
+          final id = int.tryParse(state.pathParameters['id'] ?? '');
+          if (id == null) return const _NotFoundScreen();
           return PersonScreen(personId: id);
         },
       ),
@@ -102,7 +106,86 @@ class AppRouter {
       ),
     ],
     navigatorKey: _rootNavigatorKey,
+    errorBuilder: (context, state) => const _NotFoundScreen(),
   );
+}
+
+/// Shown when a route can't be resolved (e.g. a malformed deep link with a
+/// non-numeric id, or an unknown path). Carries the Vynema brand so the
+/// fallback still feels like part of the app rather than a dead end.
+class _NotFoundScreen extends StatelessWidget {
+  const _NotFoundScreen();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    return Container(
+      decoration: BoxDecoration(
+        gradient: isDark ? AppColors.darkBackgroundGradient : null,
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(backgroundColor: Colors.transparent),
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                ShaderMask(
+                  shaderCallback: (bounds) =>
+                      AppColors.brandGradient.createShader(bounds),
+                  child: Text(
+                    context.l10n.appTitle,
+                    style: theme.textTheme.headlineMedium?.copyWith(
+                      fontWeight: FontWeight.w800,
+                      color: Colors.white,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 28),
+                Icon(
+                  Icons.movie_filter_outlined,
+                  size: 72,
+                  color: theme.colorScheme.primary,
+                ),
+                const SizedBox(height: 12),
+                ShaderMask(
+                  shaderCallback: (bounds) =>
+                      AppColors.brandGradient.createShader(bounds),
+                  child: Text(
+                    '404',
+                    style: theme.textTheme.displaySmall?.copyWith(
+                      fontWeight: FontWeight.w900,
+                      color: Colors.white,
+                      letterSpacing: 2,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  context.l10n.emptyContent,
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.bodyLarge?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+                const SizedBox(height: 28),
+                FilledButton.icon(
+                  onPressed: () => context.go('/home'),
+                  icon: const Icon(Icons.home_rounded),
+                  label: Text(context.l10n.goHome),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 final GlobalKey<NavigatorState> _rootNavigatorKey =
