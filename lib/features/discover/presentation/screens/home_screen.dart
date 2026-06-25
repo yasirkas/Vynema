@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -40,6 +42,8 @@ class HomeScreen extends ConsumerWidget {
               SliverAppBar(
                 floating: true,
                 backgroundColor: Colors.transparent,
+                scrolledUnderElevation: 0,
+                flexibleSpace: _FrostedBar(isDark: isDark),
                 title: const _BrandTitle(),
                 actions: [
                   IconButton(
@@ -138,6 +142,36 @@ class _GenreRow extends ConsumerWidget {
                   ),
                 );
               },
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Frosted-glass backdrop for the app bar so the title and actions stay
+/// legible over content when the bar floats back into view.
+class _FrostedBar extends StatelessWidget {
+  const _FrostedBar({required this.isDark});
+
+  final bool isDark;
+
+  @override
+  Widget build(BuildContext context) {
+    final fill = isDark
+        ? AppColors.darkBackground.withValues(alpha: 0.55)
+        : AppColors.lightBackground.withValues(alpha: 0.7);
+    return ClipRect(
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 18, sigmaY: 18),
+        child: Container(
+          decoration: BoxDecoration(
+            color: fill,
+            border: Border(
+              bottom: BorderSide(
+                color: Colors.white.withValues(alpha: isDark ? 0.06 : 0.08),
+              ),
             ),
           ),
         ),
