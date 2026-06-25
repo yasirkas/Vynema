@@ -44,6 +44,15 @@
   "typeMovie": "Film",
   "typeTv": "Dizi",
 
+  "seasonsCount": "{count} Sezon",
+  "@seasonsCount": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "episodesCount": "{count} Bölüm",
+  "@episodesCount": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+
   "personBiography": "Biyografi",
   "personFilmography": "Filmografisi",
   "bioReadMore": "Devamını gör",

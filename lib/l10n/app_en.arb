@@ -49,6 +49,15 @@
   "typeMovie": "Movie",
   "typeTv": "TV Show",
 
+  "seasonsCount": "{count} Seasons",
+  "@seasonsCount": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "episodesCount": "{count} Episodes",
+  "@episodesCount": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+
   "personBiography": "Biography",
   "personFilmography": "Filmography",
   "bioReadMore": "Read more",

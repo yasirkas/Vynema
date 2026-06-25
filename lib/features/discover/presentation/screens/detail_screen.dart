@@ -222,13 +222,18 @@ class _MetaRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isTv = detail.mediaType == MediaType.tv;
+    final seasons = detail.numberOfSeasons;
+    final episodes = detail.numberOfEpisodes;
     final chips = <Widget>[
       RatingBadge(voteAverage: detail.voteAverage),
       if (detail.year != null) _MetaText(detail.year!),
       if (detail.formattedRuntime != null) _MetaText(detail.formattedRuntime!),
-      _MetaText(detail.mediaType == MediaType.movie
-          ? context.l10n.typeMovie
-          : context.l10n.typeTv),
+      _MetaText(isTv ? context.l10n.typeTv : context.l10n.typeMovie),
+      if (isTv && seasons != null && seasons > 0)
+        _MetaText(context.l10n.seasonsCount(seasons)),
+      if (isTv && episodes != null && episodes > 0)
+        _MetaText(context.l10n.episodesCount(episodes)),
     ];
     return Wrap(
       spacing: 12,

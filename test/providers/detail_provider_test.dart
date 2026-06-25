@@ -36,6 +36,8 @@ const _fightClub = MediaDetail(
   trailerKey: null,
   similar: [],
   watchProviders: [],
+  numberOfSeasons: null,
+  numberOfEpisodes: null,
 );
 
 void main() {

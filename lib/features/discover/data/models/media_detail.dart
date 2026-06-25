@@ -22,6 +22,8 @@ class MediaDetail {
     required this.trailerKey,
     required this.similar,
     required this.watchProviders,
+    required this.numberOfSeasons,
+    required this.numberOfEpisodes,
   });
 
   final int id;
@@ -40,6 +42,8 @@ class MediaDetail {
   final String? trailerKey;
   final List<MediaItem> similar;
   final List<WatchProvider> watchProviders;
+  final int? numberOfSeasons;
+  final int? numberOfEpisodes;
 
   String? posterUrl({String size = ApiConstants.posterSize}) =>
       ApiConstants.imageUrl(posterPath, size: size);
@@ -143,6 +147,8 @@ class MediaDetail {
       trailerKey: trailerKey,
       similar: similar,
       watchProviders: watchProviders,
+      numberOfSeasons: (json['number_of_seasons'] as num?)?.toInt(),
+      numberOfEpisodes: (json['number_of_episodes'] as num?)?.toInt(),
     );
   }
 }
