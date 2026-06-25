@@ -147,7 +147,16 @@ class _DetailContent extends ConsumerWidget {
                     spacing: 8,
                     runSpacing: 8,
                     children: detail.genres
-                        .map((g) => Chip(label: Text(g.name)))
+                        .map(
+                          (g) => ActionChip(
+                            label: Text(g.name),
+                            onPressed: () => context.goToGenre(
+                              detail.mediaType,
+                              g.id,
+                              g.name,
+                            ),
+                          ),
+                        )
                         .toList(),
                   ),
                 ],
