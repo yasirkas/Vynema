@@ -53,9 +53,14 @@ class MediaCarousel extends ConsumerWidget {
                 separatorBuilder: (_, _) => const SizedBox(width: 12),
                 itemBuilder: (context, index) => FadeSlideIn(
                   delay: staggerDelay(index),
-                  child: SizedBox(
-                    width: height * 0.66,
-                    child: MediaCard(item: items[index]),
+                  // Bottom padding keeps the year label off the carousel's
+                  // bottom edge so it never sits flush against the navbar.
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: SizedBox(
+                      width: height * 0.66,
+                      child: MediaCard(item: items[index]),
+                    ),
                   ),
                 ),
               ),
