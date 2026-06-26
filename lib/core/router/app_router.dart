@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -31,9 +32,14 @@ class AppRouter {
         parentNavigatorKey: _rootNavigatorKey,
         builder: (context, state) => const SplashScreen(),
       ),
-      StatefulShellRoute.indexedStack(
+      StatefulShellRoute(
         builder: (context, state, navigationShell) =>
             AppShell(navigationShell: navigationShell),
+        navigatorContainerBuilder: (context, navigationShell, children) =>
+            SwipeableTabView(
+          navigationShell: navigationShell,
+          children: children,
+        ),
         branches: [
           StatefulShellBranch(
             routes: [
@@ -64,43 +70,54 @@ class AppRouter {
       GoRoute(
         path: '/detail/:type/:id',
         parentNavigatorKey: _rootNavigatorKey,
-        builder: (context, state) {
+        pageBuilder: (context, state) {
           final type = MediaType.fromString(state.pathParameters['type']);
           final id = int.tryParse(state.pathParameters['id'] ?? '');
-          if (id == null) return const _NotFoundScreen();
-          return DetailScreen(mediaType: type, id: id);
+          return _swipeablePage(
+            state,
+            id == null
+                ? const _NotFoundScreen()
+                : DetailScreen(mediaType: type, id: id),
+          );
         },
       ),
       GoRoute(
         path: '/discover',
         parentNavigatorKey: _rootNavigatorKey,
-        builder: (context, state) => DiscoverScreen(
-          filter: state.extra! as DiscoverFilter,
+        pageBuilder: (context, state) => _swipeablePage(
+          state,
+          DiscoverScreen(filter: state.extra! as DiscoverFilter),
         ),
       ),
       GoRoute(
         path: '/settings',
         parentNavigatorKey: _rootNavigatorKey,
-        builder: (context, state) => const SettingsScreen(),
+        pageBuilder: (context, state) =>
+            _swipeablePage(state, const SettingsScreen()),
       ),
       GoRoute(
         path: '/person/:id',
         parentNavigatorKey: _rootNavigatorKey,
-        builder: (context, state) {
+        pageBuilder: (context, state) {
           final id = int.tryParse(state.pathParameters['id'] ?? '');
-          if (id == null) return const _NotFoundScreen();
-          return PersonScreen(personId: id);
+          return _swipeablePage(
+            state,
+            id == null ? const _NotFoundScreen() : PersonScreen(personId: id),
+          );
         },
       ),
       GoRoute(
         path: '/genre',
         parentNavigatorKey: _rootNavigatorKey,
-        builder: (context, state) {
+        pageBuilder: (context, state) {
           final extra = state.extra! as Map<String, dynamic>;
-          return GenreScreen(
-            mediaType: extra['type'] as MediaType,
-            genreId: extra['genreId'] as int,
-            genreName: extra['genreName'] as String,
+          return _swipeablePage(
+            state,
+            GenreScreen(
+              mediaType: extra['type'] as MediaType,
+              genreId: extra['genreId'] as int,
+              genreName: extra['genreName'] as String,
+            ),
           );
         },
       ),
@@ -109,6 +126,12 @@ class AppRouter {
     errorBuilder: (context, state) => const _NotFoundScreen(),
   );
 }
+
+/// Wraps [child] in a [CupertinoPage] so pushed screens get an interactive
+/// swipe-from-left-edge back gesture (on every platform, not just iOS) plus a
+/// horizontal slide transition.
+CupertinoPage<void> _swipeablePage(GoRouterState state, Widget child) =>
+    CupertinoPage<void>(key: state.pageKey, child: child);
 
 /// Shown when a route can't be resolved (e.g. a malformed deep link with a
 /// non-numeric id, or an unknown path). Carries the Vynema brand so the
