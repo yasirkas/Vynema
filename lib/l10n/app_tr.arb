@@ -84,6 +84,8 @@
   "emptyContent": "İçerik bulunamadı.",
   "retry": "Tekrar Dene",
   "goHome": "Ana sayfaya dön",
+  "offlineBanner": "İnternet bağlantısı yok",
+  "onlineBanner": "İnternete yeniden bağlanıldı",
 
   "errorNoApiKey": "TMDB API anahtarı bulunamadı. Lütfen .env dosyasına anahtarınızı ekleyin.",
   "errorTimeout": "Bağlantı zaman aşımına uğradı. Lütfen tekrar deneyin.",

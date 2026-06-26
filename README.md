@@ -11,6 +11,7 @@ Flutter ile geliştirilmiş, [TMDB](https://www.themoviedb.org/) API ile çalı�
 - **Kişiler** — profil ve öne çıkan yapımlarıyla kişi sayfaları
 - **Favoriler** — içerik ekleyip çıkarın, cihazda yerel olarak saklanır
 - **Ayarlar** — tema (koyu/açık) ve dil (Türkçe/İngilizce) çalışma anında değiştirilebilir, ikisi de kalıcı
+- **Çevrimdışı farkındalık** — bağlantı kesilince üstte uyarı bandı, geri gelince onay bandı; bağlantı dönünce içerik otomatik yeniden yüklenir
 - **İncelikli arayüz** — açılış ekranı, glassmorphism, gradient'ler, shimmer yükleme durumları ve akıcı geçişler
 
 ## Ekran Görüntüleri
@@ -37,6 +38,7 @@ Flutter ile geliştirilmiş, [TMDB](https://www.themoviedb.org/) API ile çalı�
 | State yönetimi | Riverpod 3.x (`Notifier` / `NotifierProvider`, auto-dispose) |
 | Yerel depolama | Hive (favoriler ve tercihler JSON map olarak, codegen yok) |
 | Ağ | Dio + interceptor (`api_key` ve dile duyarlı `language` enjekte eder) |
+| Bağlantı durumu | connectivity_plus (çevrimdışı/çevrimiçi bandı + yeniden bağlanınca otomatik refetch) |
 | Navigasyon | go_router + `StatefulShellRoute` (durumu korunan alt menü sekmeleri) |
 | Yerelleştirme | Flutter `gen-l10n` — Türkçe & İngilizce ARB dosyaları, çalışma anında değiştirilebilir |
 | Yapılandırma / gizli anahtarlar | flutter_dotenv (`.env`, asla commit'lenmez) |

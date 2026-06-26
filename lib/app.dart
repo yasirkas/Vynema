@@ -5,6 +5,7 @@ import 'core/providers.dart';
 import 'core/router/app_router.dart';
 import 'core/theme/app_theme.dart';
 import 'l10n/app_localizations.dart';
+import 'shared/widgets/connectivity_scope.dart';
 
 /// Root application widget.
 class VynemaApp extends ConsumerWidget {
@@ -25,6 +26,7 @@ class VynemaApp extends ConsumerWidget {
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       routerConfig: AppRouter.router,
+      builder: (context, child) => ConnectivityScope(child: child!),
     );
   }
 }
