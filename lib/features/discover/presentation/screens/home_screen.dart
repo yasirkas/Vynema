@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -40,7 +38,7 @@ class HomeScreen extends ConsumerWidget {
           child: CustomScrollView(
             slivers: [
               SliverAppBar(
-                floating: true,
+                pinned: true,
                 backgroundColor: Colors.transparent,
                 scrolledUnderElevation: 0,
                 flexibleSpace: _FrostedBar(isDark: isDark),
@@ -58,30 +56,45 @@ class HomeScreen extends ConsumerWidget {
                   ),
                 ],
               ),
-              const SliverToBoxAdapter(child: _GenreRow()),
-              const SliverToBoxAdapter(child: FeaturedHero()),
+              // Each section is wrapped in a RepaintBoundary so vertical
+              // scrolling just translates a cached layer instead of repainting
+              // the carousels (and the genre row's ShaderMask) every frame.
+              const SliverToBoxAdapter(
+                child: RepaintBoundary(child: _GenreRow()),
+              ),
+              const SliverToBoxAdapter(
+                child: RepaintBoundary(child: FeaturedHero()),
+              ),
               SliverToBoxAdapter(
-                child: MediaCarousel(
-                  title: l10n.carouselNowPlaying,
-                  provider: nowPlayingProvider,
+                child: RepaintBoundary(
+                  child: MediaCarousel(
+                    title: l10n.carouselNowPlaying,
+                    provider: nowPlayingProvider,
+                  ),
                 ),
               ),
               SliverToBoxAdapter(
-                child: MediaCarousel(
-                  title: l10n.carouselTopRated,
-                  provider: topRatedMoviesProvider,
+                child: RepaintBoundary(
+                  child: MediaCarousel(
+                    title: l10n.carouselTopRated,
+                    provider: topRatedMoviesProvider,
+                  ),
                 ),
               ),
               SliverToBoxAdapter(
-                child: MediaCarousel(
-                  title: l10n.titlePopularMovies,
-                  provider: popularMoviesProvider,
+                child: RepaintBoundary(
+                  child: MediaCarousel(
+                    title: l10n.titlePopularMovies,
+                    provider: popularMoviesProvider,
+                  ),
                 ),
               ),
               SliverToBoxAdapter(
-                child: MediaCarousel(
-                  title: l10n.titlePopularTv,
-                  provider: popularTvProvider,
+                child: RepaintBoundary(
+                  child: MediaCarousel(
+                    title: l10n.titlePopularTv,
+                    provider: popularTvProvider,
+                  ),
                 ),
               ),
               const SliverToBoxAdapter(child: SizedBox(height: 24)),
@@ -150,8 +163,13 @@ class _GenreRow extends ConsumerWidget {
   }
 }
 
-/// Frosted-glass backdrop for the app bar so the title and actions stay
-/// legible over content when the bar floats back into view.
+/// Solid backdrop for the pinned app bar so it stays clearly visible at all
+/// times and never bleeds into the content beneath it.
+///
+/// Deliberately avoids `BackdropFilter`: a live blur re-samples the scrolling
+/// content behind the bar every frame, which janks scrolling on mid-range GPUs
+/// (e.g. Adreno 618). An opaque fill gives a clean, always-legible bar at zero
+/// GPU cost.
 class _FrostedBar extends StatelessWidget {
   const _FrostedBar({required this.isDark});
 
@@ -159,20 +177,17 @@ class _FrostedBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final fill = isDark
-        ? AppColors.darkBackground.withValues(alpha: 0.55)
-        : AppColors.lightBackground.withValues(alpha: 0.7);
-    return ClipRect(
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 18, sigmaY: 18),
-        child: Container(
-          decoration: BoxDecoration(
-            color: fill,
-            border: Border(
-              bottom: BorderSide(
-                color: Colors.white.withValues(alpha: isDark ? 0.06 : 0.08),
-              ),
-            ),
+    final fill =
+        isDark ? AppColors.darkBackground : AppColors.lightBackground;
+    // Container (not DecoratedBox) so the fill expands to cover the whole bar;
+    // a childless DecoratedBox collapses to zero size and paints nothing,
+    // leaving the bar transparent.
+    return Container(
+      decoration: BoxDecoration(
+        color: fill,
+        border: Border(
+          bottom: BorderSide(
+            color: Colors.white.withValues(alpha: isDark ? 0.06 : 0.08),
           ),
         ),
       ),
