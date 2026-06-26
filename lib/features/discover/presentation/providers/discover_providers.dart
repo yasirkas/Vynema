@@ -22,6 +22,18 @@ final genresProvider =
   (ref, type) => ref.watch(mediaRepositoryProvider).getGenres(type),
 );
 
+/// Whether the home genre row shows movie or TV genres. Kept (not auto-dispose)
+/// so the chosen type survives navigation away from and back to the home tab.
+class GenreTypeNotifier extends Notifier<MediaType> {
+  @override
+  MediaType build() => MediaType.movie;
+
+  void set(MediaType type) => state = type;
+}
+
+final genreTypeProvider =
+    NotifierProvider<GenreTypeNotifier, MediaType>(GenreTypeNotifier.new);
+
 typedef GenreParams = ({MediaType type, int genreId});
 
 final nowPlayingProvider = FutureProvider.autoDispose<List<MediaItem>>(
